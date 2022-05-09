@@ -7,7 +7,7 @@ const handler: NextApiHandler = async (request, response) => {
   const baseURL = getBaseURL(request);
 
   const manifest = {
-    id: "saleor.app",
+    id: "saleor.app.klaviyo",
     version: version,
     name: name,
     permissions: ["MANAGE_ORDERS"],

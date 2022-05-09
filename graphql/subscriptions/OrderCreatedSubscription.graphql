@@ -1,0 +1,9 @@
+subscription OrderFullyPaidSubscription {
+  event {
+    ... on OrderCreated {
+      order {
+        ... OrderFragment
+      }
+    }
+  }
+}
