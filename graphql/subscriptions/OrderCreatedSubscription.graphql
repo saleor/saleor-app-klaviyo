@@ -1,4 +1,4 @@
-subscription OrderFullyPaidSubscription {
+subscription OrderCreatedSubscription {
   event {
     ... on OrderCreated {
       order {
