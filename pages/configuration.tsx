@@ -1,11 +1,7 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 
-import { useFetchTwelveProductsQuery } from "../generated/graphql";
-
-const Home: NextPage = () => {
-  const [{ data }] = useFetchTwelveProductsQuery();
-
+const Configuration: NextPage = () => {
   return (
     <div>
       <Head>
@@ -16,10 +12,9 @@ const Home: NextPage = () => {
 
       <main>
         <div className="text-white">Saleor App Template - Configuration</div>
-        {JSON.stringify(data)}
       </main>
     </div>
   );
 };
 
-export default Home;
+export default Configuration;

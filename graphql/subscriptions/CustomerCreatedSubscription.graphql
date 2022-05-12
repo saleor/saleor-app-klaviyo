@@ -1,0 +1,31 @@
+subscription CustomerCreatedSubscription {
+  event {
+    ... on CustomerCreated {
+      user {
+        __typename
+        id
+        defaultShippingAddress {
+          ... AddressFragment
+        }
+        defaultBillingAddress {
+          ... AddressFragment
+        }
+        addresses {
+          ... AddressFragment
+        }
+        privateMetadata {
+          ... MetadataFragment
+        }
+        metadata {
+          ... MetadataFragment
+        }
+        email
+        firstName
+        lastName
+        isActive
+        dateJoined
+        languageCode
+      }
+    }
+  }
+}
