@@ -22,15 +22,7 @@ const handler: NextApiHandler = async (request, response) => {
   }
 
   console.info("Middleware checks were successful!");
-
-  const receivedEvent = request.headers["saleor-event"]?.toString();
-
-  console.info("Received event - ", receivedEvent);
-
-  if (receivedEvent !== expectedEvent) {
-    response.status(400).json({ success: false, message: "Invalid event" });
-    return;
-  }
+  console.info("Received event - ", expectedEvent);
 
   const context = request.body;
   const userEmail = context[0]?.user_email;
@@ -42,7 +34,7 @@ const handler: NextApiHandler = async (request, response) => {
 
   const klaviyoClient = Klaviyo(process.env.KLAVIYO_TOKEN as string);
 
-  klaviyoClient.send(receivedEvent, userEmail, context);
+  klaviyoClient.send(expectedEvent, userEmail, context);
 
   response.json({ success: true, message: "Message sent!" });
   return;
