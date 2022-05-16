@@ -1,17 +1,41 @@
 import { NextApiHandler } from "next";
 import { print } from "graphql/language/printer";
+import fg from 'fast-glob';
+import path from 'path';
 
 import { version, name } from "../../package.json";
+import * as GeneratedGraphQL from "../../generated/graphql";
 import { getBaseURL } from "../../lib/middlewares";
-import {
-  CustomerCreatedSubscriptionDocument,
-  FulfillmentCreatedSubscriptionDocument,
-  OrderCreatedSubscriptionDocument,
-  OrderFullyPaidSubscriptionDocument,
-} from "../../generated/graphql";
+
+const capitalize = (value: string) => value.charAt(0).toUpperCase() + value.slice(1);
+
+const inferWebhooks = async (baseURL: string) => {
+  const entries = await fg(['*.ts'], { cwd: 'pages/api/webhooks' });
+
+  const dropFileExtension = (filename: string) => path.parse(filename).name;
+  const r = entries.map(dropFileExtension).map((name: string) => {
+
+    const camelcaseName = name.split('-').map(capitalize).join('');
+    const statement = `${camelcaseName}SubscriptionDocument`;
+    const query = statement in  GeneratedGraphQL ? print((GeneratedGraphQL as any)[statement]) : '';
+
+    return {
+      name,
+      asyncEvents: [name.toUpperCase().replace("-", "_")],
+      query, 
+      targetUrl: `${baseURL}/api/webhooks/${name}`,
+      isActive: true,
+    }
+  })
+
+  return r
+}
+
 
 const handler: NextApiHandler = async (request, response) => {
   const baseURL = getBaseURL(request);
+
+  const webhooks = await inferWebhooks(baseURL);
 
   const manifest = {
     id: "saleor.app.klaviyo",
@@ -20,36 +44,7 @@ const handler: NextApiHandler = async (request, response) => {
     permissions: ["MANAGE_USERS", "MANAGE_ORDERS"],
     configurationUrl: `${baseURL}/configuration`,
     tokenTargetUrl: `${baseURL}/api/register`,
-    webhooks: [
-      {
-        name: "order-created",
-        asyncEvents: ["ORDER_CREATED"],
-        query: print(OrderCreatedSubscriptionDocument),
-        targetUrl: `${baseURL}/api/webhooks/order-created`,
-        isActive: true,
-      },
-      {
-        name: "order-fully-paid",
-        asyncEvents: ["ORDER_FULLY_PAID"],
-        query: print(OrderFullyPaidSubscriptionDocument),
-        targetUrl: `${baseURL}/api/webhooks/order-fully-paid`,
-        isActive: true,
-      },
-      {
-        name: "customer-created",
-        asyncEvents: ["CUSTOMER_CREATED"],
-        query: print(CustomerCreatedSubscriptionDocument),
-        targetUrl: `${baseURL}/api/webhooks/customer-created`,
-        isActive: true,
-      },
-      {
-        name: "fulfillment-created",
-        asyncEvents: ["FULFILLMENT_CREATED"],
-        query: print(FulfillmentCreatedSubscriptionDocument),
-        targetUrl: `${baseURL}/api/webhooks/fulfillment-created`,
-        isActive: true,
-      },
-    ],
+    webhooks,
   };
 
   response.json(manifest);
