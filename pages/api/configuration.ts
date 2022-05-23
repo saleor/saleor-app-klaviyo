@@ -14,8 +14,11 @@ import {
 } from "../../generated/graphql";
 
 const CONFIGURATION_KEYS = [
-  "THAT_SECRET",
-  "THIS_VALUE",
+  "PUBLIC_TOKEN",
+  "CUSTOMER_CREATED_METRIC",
+  "FULFILLMENT_CREATED_METRIC",
+  "ORDER_CREATED_METRIC",
+  "ORDER_FULLY_PAID_METRIC",
 ];
 
 const prepareMetadataFromRequest = (input: MetadataInput[] | MetadataItem[]) =>
