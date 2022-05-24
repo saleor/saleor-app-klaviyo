@@ -1,14 +1,31 @@
-import '../styles/globals.css'
-import type { AppProps } from 'next/app'
-import { Provider } from 'urql';
-import { client } from '../lib/graphql';
+import React, { useEffect, PropsWithChildren } from "react";
+import type { AppProps } from "next/app";
+import { ThemeProvider as MacawUIThemeProvider } from "@saleor/macaw-ui";
 
-function MyApp({ Component, pageProps }: AppProps) {
+import "../styles/globals.css";
+import AppBridgeProvider from "../providers/AppBridgeProvider";
+import GraphQLProvider from "../providers/GraphQLProvider";
+
+// That's a hack required by Macaw-UI incompitability with React@18
+const ThemeProvider = MacawUIThemeProvider as React.FC<PropsWithChildren<{}>>;
+
+const SaleorApp = ({ Component, pageProps }: AppProps) => {
+  useEffect(() => {
+    const jssStyles = document.querySelector("#jss-server-side");
+    if (jssStyles) {
+      jssStyles?.parentElement?.removeChild(jssStyles);
+    }
+  }, []);
+
   return (
-    <Provider value={client}>
-      <Component {...pageProps} />
-    </Provider>
+    <AppBridgeProvider>
+      <GraphQLProvider>
+        <ThemeProvider>
+          <Component {...pageProps} />
+        </ThemeProvider>
+      </GraphQLProvider>
+    </AppBridgeProvider>
   );
-}
+};
 
-export default MyApp
+export default SaleorApp;

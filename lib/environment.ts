@@ -1,15 +1,24 @@
 import fs from "fs";
 import fetch from "node-fetch";
 
+const maskToken = (token: string) =>
+  "*".repeat(Math.max(token.length-4, 0)) + token.slice(-4);
+
 export const getAuthToken = () => {
+  let token;
   if (process.env.VERCEL === "1") {
-    return process.env.AUTH_TOKEN || "";
+    token = process.env.SALEOR_AUTH_TOKEN || "";
   } else {
-    return fs.readFileSync(".auth_token", "utf8");
+    token = fs.readFileSync(".auth_token", "utf8");
   }
+
+  console.log("Using authToken: ", maskToken(token));
+  return token;
 };
 
 export const setAuthToken = async (token: string) => {
+  console.log("Setting authToken: ", maskToken(token));
+
   if (process.env.VERCEL === "1") {
     await fetch(
       process.env.SALEOR_MARKETPLACE_REGISTER_URL as string,
@@ -17,7 +26,7 @@ export const setAuthToken = async (token: string) => {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          token,
+          auth_token: token,
           marketplace_token: process.env.SALEOR_MARKETPLACE_TOKEN,
         }),
       },
