@@ -14,14 +14,27 @@ import {
 } from "../../generated/graphql";
 
 const CONFIGURATION_KEYS = [
-  "THAT_SECRET",
-  "THIS_VALUE",
+  "PUBLIC_TOKEN",
+  "CUSTOMER_CREATED_METRIC",
+  "FULFILLMENT_CREATED_METRIC",
+  "ORDER_CREATED_METRIC",
+  "ORDER_FULLY_PAID_METRIC",
 ];
 
-const filterConfigFromMetadata = (input: MetadataInput[] | MetadataItem[]) =>
+const prepareMetadataFromRequest = (input: MetadataInput[] | MetadataItem[]) =>
   input
     .filter(({ key }) => CONFIGURATION_KEYS.includes(key))
     .map(({ key, value }) => ({ key, value }));
+
+const prepareResponseFromMetadata = (input: MetadataItem[]) => {
+  const output: MetadataInput[] = [];
+  for (const configurationKey of CONFIGURATION_KEYS) {
+    output.push(
+      input.find(({ key }) => key === configurationKey) ?? { key: configurationKey, value: "" }
+    );
+  }
+  return output.map(({ key, value }) => ({ key, value }));
+};
 
 const handler: NextApiHandler = async (request, response) => {
   let saleorDomain: string;
@@ -52,7 +65,7 @@ const handler: NextApiHandler = async (request, response) => {
         (await client.query<FetchAppMetadataQuery>(FetchAppMetadataDocument).toPromise()).data
       )?.app?.privateMetadata!;
 
-      response.json({ success: true, data: filterConfigFromMetadata(privateMetadata) });
+      response.json({ success: true, data: prepareResponseFromMetadata(privateMetadata) });
       break;
     case "POST":
       const appId = (
@@ -62,11 +75,11 @@ const handler: NextApiHandler = async (request, response) => {
       privateMetadata = (
         (await client.mutation<UpdateAppMetadataMutation>(
           UpdateAppMetadataDocument,
-          { id: appId, input: filterConfigFromMetadata(request.body.data) }
+          { id: appId, input: prepareMetadataFromRequest(request.body.data) }
         ).toPromise()).data
       )?.updatePrivateMetadata?.item?.privateMetadata!;
 
-      response.json({ success: true, data: filterConfigFromMetadata(privateMetadata) });
+      response.json({ success: true, data: prepareResponseFromMetadata(privateMetadata) });
       break;
     default:
       response
