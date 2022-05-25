@@ -3,14 +3,16 @@ import Klaviyo from "../../../lib/klaviyo";
 
 import { webhookMiddleware } from "../../../lib/middlewares";
 import MiddlewareError from "../../../utils/MiddlewareError";
+import { getValue } from "../../../lib/metadata";
 
 const expectedEvent = "order_fully_paid";
 
 const handler: NextApiHandler = async (request, response) => {
   console.log(request.body);
 
+  let saleorDomain;
   try {
-    webhookMiddleware(request, expectedEvent);
+    saleorDomain = webhookMiddleware(request, expectedEvent) as string;
   } catch (e: unknown) {
     const error = e as MiddlewareError;
 
@@ -24,17 +26,18 @@ const handler: NextApiHandler = async (request, response) => {
   console.info("Middleware checks were successful!");
   console.info("Received event - ", expectedEvent);
 
+  const klaviyoToken = await getValue(saleorDomain, "PUBLIC_TOKEN");
+  const klaviyoMetric = await getValue(saleorDomain, "ORDER_CREATED_METRIC");
   const context = request.body;
-  const userEmail = context[0]?.user_email;
+  const userEmail = context.order.userEmail;
 
   if (!userEmail) {
     response.status(400).json({ success: false, message: "No user email" });
     return;
   }
 
-  const klaviyoClient = Klaviyo(process.env.KLAVIYO_TOKEN as string);
-
-  klaviyoClient.send(expectedEvent, userEmail, context);
+  const klaviyoClient = Klaviyo(klaviyoToken);
+  klaviyoClient.send(klaviyoMetric, userEmail, context);
 
   response.json({ success: true, message: "Message sent!" });
   return;

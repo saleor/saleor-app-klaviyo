@@ -9,6 +9,9 @@ subscription FulfillmentCreatedSubscription {
             ... AddressFragment
           }
         }
+        order {
+          ... OrderFragment
+        }
         lines {
           __typename
           id
