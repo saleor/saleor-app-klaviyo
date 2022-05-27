@@ -33,8 +33,8 @@ export const webhookMiddleware = (
   request: NextApiRequest,
   expectedEvent: string
 ) => {
+  domainMiddleware(request);
   eventMiddleware(request, expectedEvent);
-  return domainMiddleware(request);
 };
 
 export const jwtVerifyMiddleware = async (request: NextApiRequest) => {
