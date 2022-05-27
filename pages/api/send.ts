@@ -31,7 +31,7 @@ const handler: NextApiHandler = async (request, response) => {
     response
       .status(500)
       .json({ success: false, message: error.message });
-      return;
+    return;
   }
 
   const klaviyo = Klaviyo(klaviyoToken);
