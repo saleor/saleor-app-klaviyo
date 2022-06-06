@@ -30,6 +30,9 @@ subscription FulfillmentCreatedSubscription {
           }
         }
       }
+      order {
+        ... OrderFragment
+      }
     }
   }
 }
