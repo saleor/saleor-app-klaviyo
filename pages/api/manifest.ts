@@ -14,7 +14,7 @@ const handler: Handler = async (request) => {
   const webhooks = await inferWebhooks(
     baseURL,
     `${__dirname}/webhooks`,
-    GeneratedGraphQL,
+    GeneratedGraphQL
   );
 
   const manifest = {
@@ -22,7 +22,7 @@ const handler: Handler = async (request) => {
     version: version,
     name: name,
     permissions: ["MANAGE_USERS", "MANAGE_ORDERS"],
-    configurationUrl: `${baseURL}/configuration`,
+    appUrl: `${baseURL}/configuration`,
     tokenTargetUrl: `${baseURL}/api/register`,
     webhooks,
   };
