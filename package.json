@@ -9,6 +9,31 @@
     "lint": "next lint",
     "generate": "graphql-codegen"
   },
+  "saleorApp": {
+    "name": "Klaviyo",
+    "logo": "/public/logo.png",
+    "shortDescription": "Email, SMS, and more - a unified customer platform",
+    "sourceUrl": "https://github.com/saleor/saleor-app-klaviyo",
+    "vendor": "Saleor Commerce",
+    "links": [
+      {
+        "type": "developerWebsite",
+        "href": "https://saleor.io/"
+      },
+      {
+        "type": "mailContact",
+        "href": "mailto:info@saleor.io"
+      },
+      {
+        "type": "privacyPolicy",
+        "href": "https://saleor.io/legal/privacy/"
+      }
+    ],
+    "description": "Klaviyo is a unified customer platform that gives your online brand direct ownership of your consumer data and interactions, empowering you to turn transactions with customers into productive long-term relationships—at scale. The Klaviyo database integrates seamlessly with your tech stack and gives you the full story on every customer that visits—what makes them click, what makes them bounce, and what makes them buy. From the same platform, you can use Klaviyo’s suite of proven email and SMS templates to automate personalized communications like price drop alerts, friendly cart reminders, and just-in-time recommendations. Customers feel seen, not targeted—which means no more ineffective batching and blasting. Over time, Klaviyo even reveals what works and what doesn’t, uncovering trends that help you acquire and retain new customers while inspiring existing customers to buy again. It’s all there in one intuitive place—no need to start from scratch, and no need to rely on third-party marketplaces and ad networks. With Klaviyo, it’s easy to talk to every customer like you know them, and grow your business—on your own terms.",
+    "images": [
+      "/public/image.png"
+    ]
+  },
   "dependencies": {
     "@material-ui/core": "^4.12.4",
     "@material-ui/icons": "^4.11.3",
