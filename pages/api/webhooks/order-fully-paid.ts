@@ -13,7 +13,7 @@ import Klaviyo from "../../../lib/klaviyo";
 const handler: Handler = async (request) => {
   const saleorDomain = request.headers[SALEOR_DOMAIN_HEADER];
   const klaviyoToken = await getValue(saleorDomain, "PUBLIC_TOKEN");
-  const klaviyoMetric = await getValue(saleorDomain, "ORDER_CREATED_METRIC");
+  const klaviyoMetric = await getValue(saleorDomain, "ORDER_FULLY_PAID_METRIC");
   const context = request.params;
   const userEmail = context.order.userEmail;
 
