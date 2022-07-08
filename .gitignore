@@ -27,6 +27,7 @@ yarn-error.log*
 
 # local env files
 .env*.local
+.envfile
 
 # vercel
 .vercel
@@ -34,8 +35,11 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 
-# GraphQL auto-generated
-generated
-graphql.schema.json
-
 .auth_token
+
+#editor
+.vscode
+.idea
+
+# GraphQL auto-generated
+generated/
