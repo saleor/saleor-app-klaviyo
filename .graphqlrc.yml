@@ -1,4 +1,4 @@
-schema: https://vercel.saleor.cloud/graphql/
+schema: graphql/schema.graphql
 documents: graphql/**/*.graphql
 extensions:
   codegen:
@@ -9,4 +9,9 @@ extensions:
           - typescript
           - typescript-operations
           - urql-introspection
-          - typescript-urql
+          - typescript-urql:
+              documentVariablePrefix: "Untyped"
+          - typed-document-node
+      generated/schema.graphql:
+        plugins:
+          - schema-ast

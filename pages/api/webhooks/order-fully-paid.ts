@@ -2,13 +2,14 @@ import type { Handler } from "retes";
 import { Response } from "retes/response";
 import { toNextHandler } from "retes/adapter";
 import {
-  withSaleorDomainPresent,
   withSaleorEventMatch,
+  withWebhookSignatureVerified,
 } from "@saleor/app-sdk/middleware";
 import { SALEOR_DOMAIN_HEADER } from "@saleor/app-sdk/const";
 
 import { getValue } from "../../../lib/metadata";
 import Klaviyo from "../../../lib/klaviyo";
+import { withSaleorDomainMatch } from "../../../lib/middlewares";
 
 const handler: Handler = async (request) => {
   const saleorDomain = request.headers[SALEOR_DOMAIN_HEADER];
@@ -28,7 +29,14 @@ const handler: Handler = async (request) => {
 };
 
 export default toNextHandler([
-  withSaleorDomainPresent,
+  withSaleorDomainMatch,
   withSaleorEventMatch("order_fully_paid"),
+  withWebhookSignatureVerified(),
   handler,
 ]);
+
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};
