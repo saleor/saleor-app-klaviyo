@@ -26,7 +26,7 @@ const handler: Handler = async (request) => {
   }
 
   const klaviyoClient = Klaviyo(klaviyoToken);
-  klaviyoClient.send(klaviyoMetric, userEmail, context);
+  await klaviyoClient.send(klaviyoMetric, userEmail, context);
 
   return Response.OK({ success: true, message: "Message sent!" });
 };

@@ -5,14 +5,32 @@ interface EmailServiceProvider {
 const Klaviyo = (token: string): EmailServiceProvider => ({
   send: async (event, recipient, context) => {
     const formParams = new URLSearchParams();
-    formParams.append("data", JSON.stringify({
-      token,
-      event,
-      customer_properties: { $email: recipient },
-      properties: context,
-    }));
+    formParams.append(
+      "data",
+      JSON.stringify({
+        token,
+        event,
+        customer_properties: { $email: recipient },
+        properties: context,
+      })
+    );
 
-    await fetch("https://a.klaviyo.com/api/track", { method: "POST", body: formParams });
+    console.log(
+      "Klaviyo request: https://a.klaviyo.com/api/track, ",
+      formParams
+    );
+
+    const response = await fetch("https://a.klaviyo.com/api/track", {
+      method: "POST",
+      body: formParams,
+    });
+
+    console.log(
+      "Klaviyo response: ",
+      response.status,
+      ", ",
+      await response.text()
+    );
   },
 });
 
