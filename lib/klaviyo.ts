@@ -1,5 +1,5 @@
 interface EmailServiceProvider {
-  send: (event: string, recipient: string, context: any) => void;
+  send: (event: string, recipient: string, context: any) => Promise<Response>;
 }
 
 const Klaviyo = (token: string): EmailServiceProvider => ({
@@ -31,6 +31,8 @@ const Klaviyo = (token: string): EmailServiceProvider => ({
       ", ",
       await response.text()
     );
+
+    return response;
   },
 });
 
