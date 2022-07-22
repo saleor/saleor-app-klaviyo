@@ -23,8 +23,20 @@ const handler: Handler = async (request) => {
   }
 
   const klaviyoClient = Klaviyo(klaviyoToken);
-  klaviyoClient.send(klaviyoMetric, userEmail, context);
+  const klaviyoResponse = await klaviyoClient.send(
+    klaviyoMetric,
+    userEmail,
+    context
+  );
 
+  if (klaviyoResponse.status !== 200) {
+    const klaviyoMessage =
+      ` Message: ${(await klaviyoResponse.json())?.message}.` || "";
+    return Response.InternalServerError({
+      success: false,
+      message: `Klaviyo API responded with status ${klaviyoResponse.status}.${klaviyoMessage}`,
+    });
+  }
   return Response.OK({ success: true, message: "Message sent!" });
 };
 
