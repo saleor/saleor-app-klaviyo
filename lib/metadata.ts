@@ -17,7 +17,7 @@ export const getValue = async (saleorDomain: string, key: string) => {
   ).data?.app?.privateMetadata!.find((i) => i.key === key);
 
   if (item === undefined) {
-    throw Error("Metadata not found.");
+    throw new Error("Metadata not found.");
   }
   return item.value;
 };

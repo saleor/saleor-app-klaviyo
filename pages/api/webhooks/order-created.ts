@@ -9,7 +9,10 @@ import { SALEOR_DOMAIN_HEADER } from "@saleor/app-sdk/const";
 
 import { getValue } from "../../../lib/metadata";
 import Klaviyo from "../../../lib/klaviyo";
-import { withSaleorDomainMatch } from "../../../lib/middlewares";
+import {
+  withSaleorDomainMatch,
+  withErrorJsonified,
+} from "../../../lib/middlewares";
 
 const handler: Handler = async (request) => {
   const saleorDomain = request.headers[SALEOR_DOMAIN_HEADER];
@@ -41,6 +44,7 @@ const handler: Handler = async (request) => {
 };
 
 export default toNextHandler([
+  withErrorJsonified,
   withSaleorDomainMatch,
   withSaleorEventMatch("order_created"),
   withWebhookSignatureVerified(),

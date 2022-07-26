@@ -13,6 +13,24 @@ interface DashboardTokenPayload extends JwtPayload {
   app: string;
 }
 
+export const withErrorJsonified: Middleware = (handler) => async (request) => {
+  try {
+    return await handler(request);
+  } catch (error) {
+    console.log(error);
+
+    let errorMessage = "Something went wrong!";
+    if (error instanceof Error) {
+      errorMessage = error.message;
+    }
+
+    return Response.InternalServerError({
+      success: false,
+      message: errorMessage,
+    });
+  }
+};
+
 export const withSaleorDomainMatch: Middleware = (handler) =>
   withSaleorDomainPresent(async (request) => {
     const { SALEOR_DOMAIN } = await getEnvVars();
