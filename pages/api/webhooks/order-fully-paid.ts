@@ -1,14 +1,12 @@
-import type { Handler } from "retes";
-import { Response } from "retes/response";
-import { toNextHandler } from "retes/adapter";
-import {
-  withSaleorEventMatch,
-  withWebhookSignatureVerified,
-} from "@saleor/app-sdk/middleware";
 import { SALEOR_DOMAIN_HEADER } from "@saleor/app-sdk/const";
+import { withSaleorEventMatch, withWebhookSignatureVerified } from "@saleor/app-sdk/middleware";
+import { withSentry } from "@sentry/nextjs";
+import type { Handler } from "retes";
+import { toNextHandler } from "retes/adapter";
+import { Response } from "retes/response";
 
-import { getValue } from "../../../lib/metadata";
 import Klaviyo from "../../../lib/klaviyo";
+import { getValue } from "../../../lib/metadata";
 import { withSaleorDomainMatch } from "../../../lib/middlewares";
 
 const handler: Handler = async (request) => {
@@ -16,22 +14,17 @@ const handler: Handler = async (request) => {
   const klaviyoToken = await getValue(saleorDomain, "PUBLIC_TOKEN");
   const klaviyoMetric = await getValue(saleorDomain, "ORDER_FULLY_PAID_METRIC");
   const context = request.params;
-  const userEmail = context.order.userEmail;
+  const { userEmail } = context.order;
 
   if (!userEmail) {
     return Response.BadRequest({ success: false, message: "No user email." });
   }
 
   const klaviyoClient = Klaviyo(klaviyoToken);
-  const klaviyoResponse = await klaviyoClient.send(
-    klaviyoMetric,
-    userEmail,
-    context
-  );
+  const klaviyoResponse = await klaviyoClient.send(klaviyoMetric, userEmail, context);
 
   if (klaviyoResponse.status !== 200) {
-    const klaviyoMessage =
-      ` Message: ${(await klaviyoResponse.json())?.message}.` || "";
+    const klaviyoMessage = ` Message: ${(await klaviyoResponse.json())?.message}.` || "";
     return Response.InternalServerError({
       success: false,
       message: `Klaviyo API responded with status ${klaviyoResponse.status}.${klaviyoMessage}`,
@@ -40,12 +33,14 @@ const handler: Handler = async (request) => {
   return Response.OK({ success: true, message: "Message sent!" });
 };
 
-export default toNextHandler([
-  withSaleorDomainMatch,
-  withSaleorEventMatch("order_fully_paid"),
-  withWebhookSignatureVerified(),
-  handler,
-]);
+export default withSentry(
+  toNextHandler([
+    withSaleorDomainMatch,
+    withSaleorEventMatch("order_fully_paid"),
+    withWebhookSignatureVerified(),
+    handler,
+  ])
+);
 
 export const config = {
   api: {
