@@ -15,22 +15,14 @@ const Klaviyo = (token: string): EmailServiceProvider => ({
       })
     );
 
-    console.log(
-      "Klaviyo request: https://a.klaviyo.com/api/track, ",
-      formParams
-    );
+    console.debug("Klaviyo request: https://a.klaviyo.com/api/track, ", formParams);
 
     const response = await fetch("https://a.klaviyo.com/api/track", {
       method: "POST",
       body: formParams,
     });
 
-    console.log(
-      "Klaviyo response: ",
-      response.status,
-      ", ",
-      await response.text()
-    );
+    console.debug("Klaviyo response: ", response.status, ", ", await response.text());
 
     return response;
   },

@@ -1,11 +1,13 @@
-import React, { useEffect, PropsWithChildren } from "react";
-import type { AppProps } from "next/app";
-import { ThemeProvider as MacawUIThemeProvider } from "@saleor/macaw-ui";
-import { Theme } from "@material-ui/core/styles";
-
 import "../styles/globals.css";
+
+import { Theme } from "@material-ui/core/styles";
+import { ThemeProvider as MacawUIThemeProvider } from "@saleor/macaw-ui";
+import React, { PropsWithChildren, useEffect } from "react";
+
+import AuthorizedPage from "../components/AuthorizedPage/AuthorizedPage";
 import AppBridgeProvider from "../providers/AppBridgeProvider";
 import GraphQLProvider from "../providers/GraphQLProvider";
+import { AppLayoutProps } from "../types";
 
 const themeOverrides: Partial<Theme> = {
   overrides: {
@@ -23,12 +25,14 @@ const themeOverrides: Partial<Theme> = {
   },
 };
 
-// That's a hack required by Macaw-UI incompitability with React@18
+// That's a hack required by Macaw-UI incompatibility with React@18
 const ThemeProvider = MacawUIThemeProvider as React.FC<
-  PropsWithChildren<{ overrides: Partial<Theme> }>
+  PropsWithChildren<{ overrides: Partial<Theme>; ssr: boolean }>
 >;
 
-const SaleorApp = ({ Component, pageProps }: AppProps) => {
+function SaleorApp({ Component, pageProps }: AppLayoutProps) {
+  const getLayout = Component.getLayout ?? ((page) => page);
+
   useEffect(() => {
     const jssStyles = document.querySelector("#jss-server-side");
     if (jssStyles) {
@@ -39,12 +43,12 @@ const SaleorApp = ({ Component, pageProps }: AppProps) => {
   return (
     <AppBridgeProvider>
       <GraphQLProvider>
-        <ThemeProvider overrides={themeOverrides}>
-          <Component {...pageProps} />
+        <ThemeProvider overrides={themeOverrides} ssr>
+          <AuthorizedPage>{getLayout(<Component {...pageProps} />)}</AuthorizedPage>
         </ThemeProvider>
       </GraphQLProvider>
     </AppBridgeProvider>
   );
-};
+}
 
 export default SaleorApp;
