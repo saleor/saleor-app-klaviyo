@@ -11,8 +11,8 @@ import { withSaleorDomainMatch } from "../../../lib/middlewares";
 
 const handler: Handler = async (request) => {
   const saleorDomain = request.headers[SALEOR_DOMAIN_HEADER];
-  const klaviyoToken = await getValue(saleorDomain, "PUBLIC_TOKEN");
-  const klaviyoMetric = await getValue(saleorDomain, "ORDER_FULLY_PAID_METRIC");
+  const klaviyoToken = await getValue(saleorDomain as string, "PUBLIC_TOKEN");
+  const klaviyoMetric = await getValue(saleorDomain as string, "ORDER_FULLY_PAID_METRIC");
   const context = request.params;
   const { userEmail } = context.order;
 
