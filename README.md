@@ -4,16 +4,17 @@ Simple Klaviyo example app for Saleor
 
 ![](docs/readme-assets/app-screen.png)
 
+▶️ Check [getting started](./docs/connect-with-klaviyo.md) with creating Metric Flow in Klavio, triggered by Saleor events
+
 ### What's included?
 
-- Connection between Saleor and Klaviyo
-- 4 built-in, example webhooks, that trigger Klaviyo metrics
-- Add new webhooks with ease
-- Simple [getting started](./docs/connect-with-klaviyo.md) with creating Metric Flow in Klavio
+- 🧩 Connection between Saleor and Klaviyo
+- 🏆 4 built-in, example webhooks, that trigger Klaviyo metrics
+- 🎨 Add new webhooks with ease
 
-### Why Next.js
+### The stack
 
-You can use any preferred technology to create Saleor Apps, but Next.js is among the most efficient for two reasons. The first is the simplicity of maintaining your API endpoints/webhooks and your apps' configuration React front-end in a single, well-organized project. The second reason is the ease and quality of local development and deployment.
+Klaviyo app is based on App Template - you can check it [here](https://github.com/saleor/saleor-app-template)
 
 ### Learn more about Apps
 
