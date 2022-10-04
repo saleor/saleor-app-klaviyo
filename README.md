@@ -1,22 +1,15 @@
-# Saleor App Template
+# Saleor App Klaviyo
 
-Bare-bones boilerplate for writing Saleor Apps with Next.js.
+Simple Klaviyo example app for Saleor
 
-### What's Saleor App in a nutshell
-
-Saleor App is the fastest way of extending Saleor with custom logic using [asynchronous](https://docs.saleor.io/docs/3.x/developer/extending/apps/asynchronous-webhooks) and [synchronous](https://docs.saleor.io/docs/3.x/developer/extending/apps/synchronous-webhooks) webhooks (and vast Saleor's API). In most cases, creating an App consists of two tasks:
-
-- Writing webhook's code realizing your custom logic
-- Developing configuration UI that can be exposed to Saleor Dashboard via specialized view (designated in App's manifest).
+![](docs/readme-assets/app-screen.png)
 
 ### What's included?
 
-- 🚀 Communication between Saleor instance and Saleor App
-- ⚙️ Encapsulated Metadata and Private Metadata handling logic
-- 📱 Configuration UI
-- ⚡ Example of Webhook handling
-- 🧭 Example of using App Extension
-- 📖 Manifest with webhooks using custom query
+- Connection between Saleor and Klaviyo
+- 4 built-in, example webhooks, that trigger Klaviyo metrics
+- Add new webhooks with ease
+- Simple [getting started](./docs/connect-with-klaviyo.md) with creating Metric Flow in Klavio
 
 ### Why Next.js
 
