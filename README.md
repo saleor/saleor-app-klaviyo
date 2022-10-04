@@ -4,8 +4,6 @@ Simple Klaviyo example app for Saleor
 
 ![](docs/readme-assets/app-screen.png)
 
-▶️ Check [getting started](./docs/connect-with-klaviyo.md) with creating Metric Flow in Klavio, triggered by Saleor events
-
 ### What's included?
 
 - 🧩 Connection between Saleor and Klaviyo
@@ -16,13 +14,14 @@ Simple Klaviyo example app for Saleor
 
 Klaviyo app is based on App Template - you can check it [here](https://github.com/saleor/saleor-app-template)
 
-### Learn more about Apps
-
-[Apps guide](https://docs.saleor.io/docs/3.x/developer/extending/apps/key-concepts)
-
-[Configuring apps in dashboard](https://docs.saleor.io/docs/3.x/dashboard/apps)
-
 ## How to use this project
+
+### Requirements
+
+- [node version XX](http://nodejs.com)
+- [pnpm](https://pnpm.io/)
+- Saleor Cloud account (free!) or local instance
+- [Saleor CLI](https://docs.saleor.io/docs/3.x/developer/cli)
 
 ### Saleor CLI for the win 🚀
 
@@ -30,39 +29,15 @@ Klaviyo app is based on App Template - you can check it [here](https://github.co
 
 [Full Saleor CLI reference](https://docs.saleor.io/docs/3.x/developer/cli)
 
-If you don't have (free developer) Saleor Cloud account create one with the following command:
+### Local development
 
-```
-saleor register
-```
-
-Now you're ready to create your first App:
-
-```
-saleor app create [your-app-name]
-```
-
-In this step, Saleor CLI will:
-
-- clone this repository to the specified folder
-- install dependencies
-- ask you whether you'd like to install the app in the selected Saleor environment
-- create `.env` file
-- start the app in development mode
-
-Having your app ready, the final thing you want to establish is a tunnel with your Saleor environment. Go to your app's directory first and run:
-
-```
-saleor app tunnel
-```
-
-Your local application should be available now to the outside world (Saleor instance) for accepting all the events via webhooks.
-
-A quick note: the next time you come back to your project, it is enough to launch your app in a standard way (and then launch your tunnel as described earlier):
-
-```
-pnpm dev
-```
+1. Make sure you have installed required tools
+2. Clone repository
+3. Install app dependencies with `pnpm i`
+4. Start dev server `pnpm dev`
+5. To install app in your Saleor Instance and expose dev server to it, run in the separate terminal `saleor app tunnel`
+6. Now you can access the app configuration at [your dashboard]/apps and click on [klavio]
+7. Read how to connect the app with the Klaviyo [here](https://github.com/saleor/saleor-app-template)
 
 ### Local development without CLI
 
@@ -89,3 +64,9 @@ If you use [saleor-dashboard](https://github.com/saleor/saleor-dashboard) and yo
 Commands `build` and `dev` would generate schema and typed functions using Saleor's GraphQL endpoint. Commit `generated` folder to your repo as they are necessary for queries and keeping track of the schema changes.
 
 [Learn more](https://www.graphql-code-generator.com/) about GraphQL code generation.
+
+### Learn more about Saleor Apps
+
+[Apps guide](https://docs.saleor.io/docs/3.x/developer/extending/apps/key-concepts)
+
+[Configuring apps in dashboard](https://docs.saleor.io/docs/3.x/dashboard/apps)
