@@ -1,4 +1,12 @@
-import { Card, CardContent, CardHeader, TextField } from "@material-ui/core";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  List,
+  ListItem,
+  TextField,
+  Typography,
+} from "@material-ui/core";
 import Skeleton from "@material-ui/lab/Skeleton";
 import { SALEOR_AUTHORIZATION_BEARER_HEADER, SALEOR_DOMAIN_HEADER } from "@saleor/app-sdk/const";
 import { ConfirmButton, ConfirmButtonTransitionState, makeStyles } from "@saleor/macaw-ui";
@@ -114,11 +122,48 @@ function Configuration() {
   );
 }
 
+function Instructions() {
+  return (
+    <div>
+      <Typography>Useful links</Typography>
+      <List>
+        <ListItem>
+          <a href="https://github.com/saleor/saleor-app-klaviyo">Visit repository & readme</a>
+        </ListItem>
+      </List>
+      <Typography>How to configure</Typography>
+      <List>
+        <ListItem>
+          <a href="https://help.klaviyo.com/hc/en-us/articles/115005062267-How-to-Manage-Your-Account-s-API-Keys">
+            Read about public tokens
+          </a>
+        </ListItem>
+        <ListItem>
+          <a href="https://www.klaviyo.com/account#api-keys-tab">Get public token here</a>
+        </ListItem>
+        <ListItem>
+          <a href="https://help.klaviyo.com/hc/en-us/articles/115005076787-Guide-to-Managing-Your-Metrics">
+            Read about metrics
+          </a>
+        </ListItem>
+      </List>
+    </div>
+  );
+}
+
 Configuration.getLayout = (page: ReactElement) => (
-  <Card>
-    <CardHeader title="Configuration" />
-    <CardContent>{page}</CardContent>
-  </Card>
+  <div>
+    <Card style={{ marginBottom: 40 }}>
+      <CardHeader title="Instructions" />
+      <CardContent>
+        <Instructions />
+      </CardContent>
+    </Card>
+    <Card>
+      <CardHeader title="Configuration" />
+      <CardContent>{page}</CardContent>
+    </Card>
+  </div>
 );
 
 export default Configuration;
