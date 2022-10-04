@@ -46,3 +46,4 @@ generated/
 
 # Sentry
 .sentryclirc
+.saleor-app-auth.json

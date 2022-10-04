@@ -1,5 +1,5 @@
 import { SALEOR_DOMAIN_HEADER } from "@saleor/app-sdk/const";
-import { withJWTVerified } from "@saleor/app-sdk/middleware";
+import { withJWTVerified, withRegisteredSaleorDomainHeader } from "@saleor/app-sdk/middleware";
 import { withSentry } from "@sentry/nextjs";
 import snakeCase from "lodash.snakecase";
 import type { Handler } from "retes";
@@ -12,9 +12,8 @@ import {
   MetadataItem,
   UpdateAppMetadataDocument,
 } from "../../generated/graphql";
-import { getEnvVars } from "../../lib/environment";
+import { apl } from "../../lib/apl";
 import { createClient } from "../../lib/graphql";
-import { withSaleorDomainMatch } from "../../lib/middlewares";
 import { getAppIdFromApi } from "../../lib/utils";
 
 const CONFIGURATION_KEYS = [
@@ -55,10 +54,16 @@ const prepareResponseFromMetadata = (input: MetadataItem[]) => {
 };
 
 const handler: Handler = async (request) => {
-  const saleorDomain = request.headers[SALEOR_DOMAIN_HEADER];
+  const saleorDomain = request.headers[SALEOR_DOMAIN_HEADER] as string;
+  const authData = await apl.get(saleorDomain);
+
+  if (!authData) {
+    console.debug(`Could not find auth data for the domain ${saleorDomain}.`);
+    return Response.Forbidden();
+  }
 
   const client = createClient(`https://${saleorDomain}/graphql/`, async () =>
-    Promise.resolve({ token: (await getEnvVars()).SALEOR_AUTH_TOKEN })
+    Promise.resolve({ token: authData.token })
   );
 
   let privateMetadata;
@@ -94,5 +99,9 @@ const handler: Handler = async (request) => {
 };
 
 export default withSentry(
-  toNextHandler([withSaleorDomainMatch, withJWTVerified(getAppIdFromApi), handler])
+  toNextHandler([
+    withRegisteredSaleorDomainHeader({ apl }),
+    withJWTVerified(getAppIdFromApi),
+    handler,
+  ])
 );
