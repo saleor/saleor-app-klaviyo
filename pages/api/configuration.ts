@@ -1,6 +1,7 @@
 import { SALEOR_DOMAIN_HEADER } from "@saleor/app-sdk/const";
 import { withJWTVerified } from "@saleor/app-sdk/middleware";
 import { withSentry } from "@sentry/nextjs";
+import snakeCase from "lodash.snakecase";
 import type { Handler } from "retes";
 import { toNextHandler } from "retes/adapter";
 import { Response } from "retes/response";
@@ -30,15 +31,26 @@ const prepareMetadataFromRequest = (input: MetadataInput[] | MetadataItem[]) =>
     .map(({ key, value }) => ({ key, value }));
 
 const prepareResponseFromMetadata = (input: MetadataItem[]) => {
-  const output: MetadataInput[] = [];
-  for (const configurationKey of CONFIGURATION_KEYS) {
-    output.push(
+  const output: MetadataInput[] = CONFIGURATION_KEYS.map(
+    (configurationKey) =>
       input.find(({ key }) => key === configurationKey) ?? {
         key: configurationKey,
         value: "",
       }
-    );
-  }
+  ).map((formattedInput) => {
+    if (formattedInput.key === "PUBLIC_TOKEN") {
+      return formattedInput;
+    }
+    if (formattedInput.value === "") {
+      return {
+        value: `SALEOR_${snakeCase(formattedInput.key).toUpperCase()}`,
+        key: formattedInput.key,
+      };
+    }
+
+    return formattedInput;
+  });
+
   return output.map(({ key, value }) => ({ key, value }));
 };
 

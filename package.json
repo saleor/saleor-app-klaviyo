@@ -56,7 +56,9 @@
     "react-dom": "18.2.0",
     "react-helmet": "^6.1.0",
     "retes": "^0.33.0",
-    "urql": "^2.2.2"
+    "urql": "^2.2.2",
+    "lodash.snakecase": "^4.1.1",
+    "@types/lodash.snakecase": "^4.1.7"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "2.7.0",

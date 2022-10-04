@@ -123,26 +123,76 @@ function Configuration() {
 }
 
 function Instructions() {
+  const { appBridge } = useAppBridge();
+
+  const openExternalUrl = (url: string) => {
+    // eslint-disable-next-line
+    appBridge?.dispatch({
+      type: "redirect",
+      payload: {
+        newContext: true,
+        actionId: "redirect_from_klaviyo_app",
+        to: url,
+      },
+    });
+  };
+
   return (
     <div>
       <Typography>Useful links</Typography>
       <List>
         <ListItem>
-          <a href="https://github.com/saleor/saleor-app-klaviyo">Visit repository & readme</a>
+          <a
+            onClick={(e) => {
+              e.preventDefault();
+
+              openExternalUrl("https://github.com/saleor/saleor-app-klaviyo");
+            }}
+            href="https://github.com/saleor/saleor-app-klaviyo"
+          >
+            Visit repository & readme
+          </a>
         </ListItem>
       </List>
       <Typography>How to configure</Typography>
       <List>
         <ListItem>
-          <a href="https://help.klaviyo.com/hc/en-us/articles/115005062267-How-to-Manage-Your-Account-s-API-Keys">
+          <a
+            onClick={(e) => {
+              e.preventDefault();
+
+              openExternalUrl(
+                "https://help.klaviyo.com/hc/en-us/articles/115005062267-How-to-Manage-Your-Account-s-API-Keys"
+              );
+            }}
+            href="https://help.klaviyo.com/hc/en-us/articles/115005062267-How-to-Manage-Your-Account-s-API-Keys"
+          >
             Read about public tokens
           </a>
         </ListItem>
         <ListItem>
-          <a href="https://www.klaviyo.com/account#api-keys-tab">Get public token here</a>
+          <a
+            onClick={(e) => {
+              e.preventDefault();
+
+              openExternalUrl("https://www.klaviyo.com/account#api-keys-tab");
+            }}
+            href="https://www.klaviyo.com/account#api-keys-tab"
+          >
+            Get public token here
+          </a>
         </ListItem>
         <ListItem>
-          <a href="https://help.klaviyo.com/hc/en-us/articles/115005076787-Guide-to-Managing-Your-Metrics">
+          <a
+            onClick={(e) => {
+              e.preventDefault();
+
+              openExternalUrl(
+                "https://help.klaviyo.com/hc/en-us/articles/115005076787-Guide-to-Managing-Your-Metrics"
+              );
+            }}
+            href="https://help.klaviyo.com/hc/en-us/articles/115005076787-Guide-to-Managing-Your-Metrics"
+          >
             Read about metrics
           </a>
         </ListItem>

@@ -16,6 +16,7 @@ specifiers:
   '@saleor/macaw-ui': ^0.6.3
   '@sentry/nextjs': ^7.6.0
   '@types/jsonwebtoken': ^8.5.8
+  '@types/lodash.snakecase': ^4.1.7
   '@types/node': 18.0.1
   '@types/react': 18.0.14
   '@types/react-dom': 18.0.6
@@ -37,6 +38,7 @@ specifiers:
   graphql-tag: ^2.12.6
   husky: ^8.0.1
   jsonwebtoken: ^8.5.1
+  lodash.snakecase: ^4.1.1
   next: 12.3.1
   node-fetch: ^3.2.6
   postcss: ^8.4.14
@@ -56,10 +58,12 @@ dependencies:
   '@saleor/app-sdk': 0.11.0_biqbaboplfbrettd7655fr4n2y
   '@saleor/macaw-ui': 0.6.4_5j6zkq4mzir5org5dcu2pr43hm
   '@sentry/nextjs': 7.9.0_next@12.3.1+react@18.2.0
+  '@types/lodash.snakecase': 4.1.7
   '@urql/exchange-auth': 0.1.7_graphql@16.5.0
   graphql: 16.5.0
   graphql-tag: 2.12.6_graphql@16.5.0
   jsonwebtoken: 8.5.1
+  lodash.snakecase: 4.1.1
   next: 12.3.1_biqbaboplfbrettd7655fr4n2y
   node-fetch: 3.2.10
   react: 18.2.0
@@ -1982,6 +1986,16 @@ packages:
     dependencies:
       '@types/node': 18.0.1
     dev: true
+
+  /@types/lodash.snakecase/4.1.7:
+    resolution: {integrity: sha512-nv9M+JJokFyfZ9QmaWVXZu2DfT40K0GictZaA8SwXczp3oCzMkjp7PtvUBQyvdoG9SnlCpoRXZDIVwQRzJbd9A==}
+    dependencies:
+      '@types/lodash': 4.14.186
+    dev: false
+
+  /@types/lodash/4.14.186:
+    resolution: {integrity: sha512-eHcVlLXP0c2FlMPm56ITode2AgLMSa6aJ05JTTbYbI+7EMkCEE5qk2E41d5g2lCVTqRe0GnnRFurmlCsDODrPw==}
+    dev: false
 
   /@types/minimatch/3.0.5:
     resolution: {integrity: sha512-Klz949h02Gz2uZCMGwDUSDS1YBlTdDDgbWHi+81l29tQALUtvz4rAYi5uoVhE5Lagoq6DeqAUlbrHvW/mXDgdQ==}
@@ -4706,6 +4720,10 @@ packages:
 
   /lodash.once/4.1.1:
     resolution: {integrity: sha512-Sb487aTOCr9drQVL8pIxOzVhafOjZN9UU54hiN8PU3uAiSV7lx1yYNpbNmex2PK6dSJoNTSJUUswT651yww3Mg==}
+
+  /lodash.snakecase/4.1.1:
+    resolution: {integrity: sha512-QZ1d4xoBHYUeuouhEq3lk3Uq7ldgyFXGBhg04+oRLnIz8o9T65Eh+8YdroUwn846zchkA9yDsDl5CVVaV2nqYw==}
+    dev: false
 
   /lodash/4.17.21:
     resolution: {integrity: sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==}
