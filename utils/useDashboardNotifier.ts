@@ -1,12 +1,10 @@
-import { actions, NotificationPayload } from "@saleor/app-sdk/app-bridge";
-
-import useApp from "../hooks/useApp";
+import { actions, NotificationPayload, useAppBridge } from "@saleor/app-sdk/app-bridge";
 
 const useDashboardNotifier = () => {
-  const app = useApp();
-  const notify = (payload: NotificationPayload) => {
-    return app?.getState()?.ready && app?.dispatch(actions.Notification(payload));
-  };
+  const { appBridgeState, appBridge } = useAppBridge();
+
+  const notify = (payload: NotificationPayload) =>
+    appBridgeState?.ready && appBridge?.dispatch(actions.Notification(payload));
 
   return [notify];
 };
