@@ -6,6 +6,7 @@ import { ThemeProvider as MacawUIThemeProvider } from "@saleor/macaw-ui";
 import React, { PropsWithChildren, useEffect } from "react";
 
 import AuthorizedPage from "../components/AuthorizedPage/AuthorizedPage";
+import { ThemeSynchronizer } from "../hooks/theme-synchronizer";
 import GraphQLProvider from "../providers/GraphQLProvider";
 import { AppLayoutProps } from "../types";
 
@@ -49,6 +50,7 @@ function SaleorApp({ Component, pageProps }: AppLayoutProps) {
     <AppBridgeProvider appBridgeInstance={appBridgeInstance}>
       <GraphQLProvider>
         <ThemeProvider overrides={themeOverrides} ssr>
+          <ThemeSynchronizer />
           <AuthorizedPage>{getLayout(<Component {...pageProps} />)}</AuthorizedPage>
         </ThemeProvider>
       </GraphQLProvider>
