@@ -18,7 +18,7 @@ Klaviyo app is based on App Template - you can check it [here](https://github.co
 
 ### Requirements
 
-- [node version XX](http://nodejs.com)
+- [node v16](http://nodejs.com)
 - [pnpm](https://pnpm.io/)
 - Saleor Cloud account (free!) or local instance
 - [Saleor CLI](https://docs.saleor.io/docs/3.x/developer/cli)
