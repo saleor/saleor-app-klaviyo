@@ -1,7 +1,6 @@
+import { useAppBridge } from "@saleor/app-sdk/app-bridge";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { useMemo } from "react";
-
-import useApp from "../hooks/useApp";
 
 interface DashboardTokenPayload extends JwtPayload {
   app: string;
@@ -13,23 +12,23 @@ interface TokenProps {
 }
 
 const useToken = (): TokenProps => {
-  const app = useApp()?.getState();
+  const { appBridgeState } = useAppBridge();
 
   const tokenClaims = useMemo(() => {
     try {
-      return jwt.decode(app?.token as string) as DashboardTokenPayload;
+      return jwt.decode(appBridgeState?.token as string) as DashboardTokenPayload;
     } catch (e) {
       console.error(e);
       return null;
     }
-  }, [app]);
+  }, [appBridgeState]);
 
-  const isTokenValid = tokenClaims ? tokenClaims.iss === app?.domain : false;
+  const isTokenValid = tokenClaims ? tokenClaims.iss === appBridgeState?.domain : false;
 
   return {
     isTokenValid,
     tokenClaims,
-    hasAppToken: !!app?.token,
+    hasAppToken: !!appBridgeState?.token,
   };
 };
 

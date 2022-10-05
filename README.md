@@ -1,34 +1,27 @@
-# Saleor App Template
+# Saleor App Klaviyo
 
-Bare-bones boilerplate for writing Saleor Apps with Next.js.
+Simple Klaviyo example app for Saleor
 
-### What's Saleor App in a nutshell
-
-Saleor App is the fastest way of extending Saleor with custom logic using [asynchronous](https://docs.saleor.io/docs/3.x/developer/extending/apps/asynchronous-webhooks) and [synchronous](https://docs.saleor.io/docs/3.x/developer/extending/apps/synchronous-webhooks) webhooks (and vast Saleor's API). In most cases, creating an App consists of two tasks:
-
-- Writing webhook's code realizing your custom logic
-- Developing configuration UI that can be exposed to Saleor Dashboard via specialized view (designated in App's manifest).
+![](docs/readme-assets/app-screen.png)
 
 ### What's included?
 
-- 🚀 Communication between Saleor instance and Saleor App
-- ⚙️ Encapsulated Metadata and Private Metadata handling logic
-- 📱 Configuration UI
-- ⚡ Example of Webhook handling
-- 🧭 Example of using App Extension
-- 📖 Manifest with webhooks using custom query
+- 🧩 Connection between Saleor and Klaviyo
+- 🏆 4 built-in, example webhooks, that trigger Klaviyo metrics
+- 🎨 Add new webhooks with ease
 
-### Why Next.js
+### The stack
 
-You can use any preferred technology to create Saleor Apps, but Next.js is among the most efficient for two reasons. The first is the simplicity of maintaining your API endpoints/webhooks and your apps' configuration React front-end in a single, well-organized project. The second reason is the ease and quality of local development and deployment.
-
-### Learn more about Apps
-
-[Apps guide](https://docs.saleor.io/docs/3.x/developer/extending/apps/key-concepts)
-
-[Configuring apps in dashboard](https://docs.saleor.io/docs/3.x/dashboard/apps)
+Klaviyo app is based on App Template - you can check it [here](https://github.com/saleor/saleor-app-template)
 
 ## How to use this project
+
+### Requirements
+
+- [node v16](http://nodejs.com)
+- [pnpm](https://pnpm.io/)
+- Saleor Cloud account (free!) or local instance
+- [Saleor CLI](https://docs.saleor.io/docs/3.x/developer/cli)
 
 ### Saleor CLI for the win 🚀
 
@@ -36,39 +29,15 @@ You can use any preferred technology to create Saleor Apps, but Next.js is among
 
 [Full Saleor CLI reference](https://docs.saleor.io/docs/3.x/developer/cli)
 
-If you don't have (free developer) Saleor Cloud account create one with the following command:
+### Local development
 
-```
-saleor register
-```
-
-Now you're ready to create your first App:
-
-```
-saleor app create [your-app-name]
-```
-
-In this step, Saleor CLI will:
-
-- clone this repository to the specified folder
-- install dependencies
-- ask you whether you'd like to install the app in the selected Saleor environment
-- create `.env` file
-- start the app in development mode
-
-Having your app ready, the final thing you want to establish is a tunnel with your Saleor environment. Go to your app's directory first and run:
-
-```
-saleor app tunnel
-```
-
-Your local application should be available now to the outside world (Saleor instance) for accepting all the events via webhooks.
-
-A quick note: the next time you come back to your project, it is enough to launch your app in a standard way (and then launch your tunnel as described earlier):
-
-```
-pnpm dev
-```
+1. Make sure you have installed required tools
+2. Clone repository
+3. Install app dependencies with `pnpm i`
+4. Start dev server `pnpm dev`
+5. To install app in your Saleor Instance and expose dev server to it, run in the separate terminal `saleor app tunnel`
+6. Now you can access the app configuration at [your dashboard]/apps and click on [klavio]
+7. Read how to connect the app with the Klaviyo [here](https://github.com/saleor/saleor-app-template)
 
 ### Local development without CLI
 
@@ -95,3 +64,9 @@ If you use [saleor-dashboard](https://github.com/saleor/saleor-dashboard) and yo
 Commands `build` and `dev` would generate schema and typed functions using Saleor's GraphQL endpoint. Commit `generated` folder to your repo as they are necessary for queries and keeping track of the schema changes.
 
 [Learn more](https://www.graphql-code-generator.com/) about GraphQL code generation.
+
+### Learn more about Saleor Apps
+
+[Apps guide](https://docs.saleor.io/docs/3.x/developer/extending/apps/key-concepts)
+
+[Configuring apps in dashboard](https://docs.saleor.io/docs/3.x/dashboard/apps)

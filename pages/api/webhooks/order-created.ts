@@ -10,7 +10,7 @@ import { getValue } from "../../../lib/metadata";
 import { withSaleorDomainMatch } from "../../../lib/middlewares";
 
 const handler: Handler = async (request) => {
-  const saleorDomain = request.headers[SALEOR_DOMAIN_HEADER];
+  const saleorDomain = request.headers[SALEOR_DOMAIN_HEADER] as string;
   const klaviyoToken = await getValue(saleorDomain, "PUBLIC_TOKEN");
   const klaviyoMetric = await getValue(saleorDomain, "ORDER_CREATED_METRIC");
   const context = request.params;

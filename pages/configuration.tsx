@@ -1,10 +1,18 @@
-import { Card, CardContent, CardHeader, TextField } from "@material-ui/core";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  List,
+  ListItem,
+  TextField,
+  Typography,
+} from "@material-ui/core";
 import Skeleton from "@material-ui/lab/Skeleton";
+import { useAppBridge } from "@saleor/app-sdk/app-bridge";
 import { SALEOR_AUTHORIZATION_BEARER_HEADER, SALEOR_DOMAIN_HEADER } from "@saleor/app-sdk/const";
 import { ConfirmButton, ConfirmButtonTransitionState, makeStyles } from "@saleor/macaw-ui";
 import { ChangeEvent, ReactElement, SyntheticEvent, useEffect, useState } from "react";
 
-import useApp from "../hooks/useApp";
 import useAppApi from "../hooks/useAppApi";
 import useDashboardNotifier from "../utils/useDashboardNotifier";
 
@@ -23,8 +31,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function Configuration() {
+  const { appBridgeState } = useAppBridge();
   const classes = useStyles();
-  const appState = useApp()?.getState();
   const [notify] = useDashboardNotifier();
   const [configuration, setConfiguration] = useState<ConfigurationField[]>();
   const [transitionState, setTransitionState] = useState<ConfirmButtonTransitionState>("default");
@@ -47,8 +55,8 @@ function Configuration() {
       method: "POST",
       headers: [
         ["content-type", "application/json"],
-        [SALEOR_DOMAIN_HEADER, appState?.domain!],
-        [SALEOR_AUTHORIZATION_BEARER_HEADER, appState?.token!],
+        [SALEOR_DOMAIN_HEADER, appBridgeState?.domain!],
+        [SALEOR_AUTHORIZATION_BEARER_HEADER, appBridgeState?.token!],
       ],
       body: JSON.stringify({ data: configuration }),
     })
@@ -76,16 +84,34 @@ function Configuration() {
     );
   };
 
-  useEffect(() => {
-    if (error) {
-      // eslint-disable-next-line @typescript-eslint/no-floating-promises
-      notify({
-        status: "error",
-        title: "Something went wrong!",
-        text: "Couldn't fetch configuration data",
-      });
-    }
-  }, [error]);
+  if (error) {
+    console.error("Can't establish connection with the App API: ", error);
+    return (
+      <div>
+        <h1>⚠️ Can&apos;t connect with the App API</h1>
+        You may see this error because:
+        <ul>
+          <li>Internet connection has been lost</li>
+          <li>
+            Application installation process is still in progress. If you use Vercel, you may need
+            to wait for redeployment of the app - try again in a minute.
+          </li>
+          <li>
+            Application is misconfigured. If you would like to know more how auth configuration is
+            kept,{" "}
+            <a
+              href="https://github.com/saleor/saleor-app-sdk/blob/main/docs/apl.md"
+              target="_blank"
+              rel="noreferrer"
+            >
+              go to APL documentation
+            </a>
+            .
+          </li>
+        </ul>
+      </div>
+    );
+  }
 
   if (configuration === undefined) {
     return <Skeleton />;
@@ -114,11 +140,98 @@ function Configuration() {
   );
 }
 
+function Instructions() {
+  const { appBridge } = useAppBridge();
+
+  const openExternalUrl = (url: string) => {
+    // eslint-disable-next-line
+    appBridge?.dispatch({
+      type: "redirect",
+      payload: {
+        newContext: true,
+        actionId: "redirect_from_klaviyo_app",
+        to: url,
+      },
+    });
+  };
+
+  return (
+    <div>
+      <Typography>Useful links</Typography>
+      <List>
+        <ListItem>
+          <a
+            onClick={(e) => {
+              e.preventDefault();
+
+              openExternalUrl("https://github.com/saleor/saleor-app-klaviyo");
+            }}
+            href="https://github.com/saleor/saleor-app-klaviyo"
+          >
+            Visit repository & readme
+          </a>
+        </ListItem>
+      </List>
+      <Typography>How to configure</Typography>
+      <List>
+        <ListItem>
+          <a
+            onClick={(e) => {
+              e.preventDefault();
+
+              openExternalUrl(
+                "https://help.klaviyo.com/hc/en-us/articles/115005062267-How-to-Manage-Your-Account-s-API-Keys"
+              );
+            }}
+            href="https://help.klaviyo.com/hc/en-us/articles/115005062267-How-to-Manage-Your-Account-s-API-Keys"
+          >
+            Read about public tokens
+          </a>
+        </ListItem>
+        <ListItem>
+          <a
+            onClick={(e) => {
+              e.preventDefault();
+
+              openExternalUrl("https://www.klaviyo.com/account#api-keys-tab");
+            }}
+            href="https://www.klaviyo.com/account#api-keys-tab"
+          >
+            Get public token here
+          </a>
+        </ListItem>
+        <ListItem>
+          <a
+            onClick={(e) => {
+              e.preventDefault();
+
+              openExternalUrl(
+                "https://help.klaviyo.com/hc/en-us/articles/115005076787-Guide-to-Managing-Your-Metrics"
+              );
+            }}
+            href="https://help.klaviyo.com/hc/en-us/articles/115005076787-Guide-to-Managing-Your-Metrics"
+          >
+            Read about metrics
+          </a>
+        </ListItem>
+      </List>
+    </div>
+  );
+}
+
 Configuration.getLayout = (page: ReactElement) => (
-  <Card>
-    <CardHeader title="Configuration" />
-    <CardContent>{page}</CardContent>
-  </Card>
+  <div>
+    <Card style={{ marginBottom: 40 }}>
+      <CardHeader title="Instructions" />
+      <CardContent>
+        <Instructions />
+      </CardContent>
+    </Card>
+    <Card>
+      <CardHeader title="Configuration" />
+      <CardContent>{page}</CardContent>
+    </Card>
+  </div>
 );
 
 export default Configuration;
