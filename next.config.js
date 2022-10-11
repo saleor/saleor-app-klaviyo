@@ -5,11 +5,21 @@ const { withSentryConfig } = require("@sentry/nextjs");
 const isSentryPropertiesInEnvironment =
   process.env.SENTRY_AUTH_TOKEN && process.env.SENTRY_PROJECT && process.env.SENTRY_ORG;
 
+/** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
   sentry: {
     disableServerWebpackPlugin: !isSentryPropertiesInEnvironment,
     disableClientWebpackPlugin: !isSentryPropertiesInEnvironment,
+  },
+  redirects() {
+    return [
+      {
+        source: "/",
+        destination: "/configuration",
+        permanent: false,
+      },
+    ];
   },
 };
 

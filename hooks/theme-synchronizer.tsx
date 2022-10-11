@@ -1,16 +1,22 @@
 import { useAppBridge } from "@saleor/app-sdk/app-bridge";
 import { useTheme } from "@saleor/macaw-ui";
-import { useEffect } from "react";
+import { memo, useEffect } from "react";
 
-export const ThemeSynchronizer = () => {
+function _ThemeSynchronizer() {
   const { appBridgeState } = useAppBridge();
-  const { setTheme } = useTheme();
+  const { setTheme, themeType } = useTheme();
 
   useEffect(() => {
-    if (setTheme && appBridgeState?.theme) {
+    if (!setTheme || !appBridgeState?.theme) {
+      return;
+    }
+
+    if (themeType !== appBridgeState?.theme) {
       setTheme(appBridgeState.theme);
     }
   }, [appBridgeState?.theme, setTheme]);
 
   return null;
-};
+}
+
+export const ThemeSynchronizer = memo(_ThemeSynchronizer);

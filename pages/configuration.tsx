@@ -8,11 +8,12 @@ import {
   Typography,
 } from "@material-ui/core";
 import Skeleton from "@material-ui/lab/Skeleton";
-import { useAppBridge } from "@saleor/app-sdk/app-bridge";
+import { useAppBridge, withAuthorization } from "@saleor/app-sdk/app-bridge";
 import { SALEOR_AUTHORIZATION_BEARER_HEADER, SALEOR_DOMAIN_HEADER } from "@saleor/app-sdk/const";
 import { ConfirmButton, ConfirmButtonTransitionState, makeStyles } from "@saleor/macaw-ui";
 import { ChangeEvent, ReactElement, SyntheticEvent, useEffect, useState } from "react";
 
+import AccessWarning from "../components/AccessWarning/AccessWarning";
 import useAppApi from "../hooks/useAppApi";
 import useDashboardNotifier from "../utils/useDashboardNotifier";
 
@@ -234,4 +235,9 @@ Configuration.getLayout = (page: ReactElement) => (
   </div>
 );
 
-export default Configuration;
+export default withAuthorization({
+  notIframe: <AccessWarning cause="not_in_iframe" />,
+  unmounted: null,
+  noDashboardToken: <AccessWarning cause="missing_access_token" />,
+  dashboardTokenInvalid: <AccessWarning cause="invalid_access_token" />,
+})(Configuration);

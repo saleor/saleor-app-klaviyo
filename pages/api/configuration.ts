@@ -1,5 +1,9 @@
 import { SALEOR_DOMAIN_HEADER } from "@saleor/app-sdk/const";
-import { withJWTVerified, withRegisteredSaleorDomainHeader } from "@saleor/app-sdk/middleware";
+import {
+  withJWTVerified,
+  withRegisteredSaleorDomainHeader,
+  withSaleorApp,
+} from "@saleor/app-sdk/middleware";
 import { withSentry } from "@sentry/nextjs";
 import snakeCase from "lodash.snakecase";
 import type { Handler } from "retes";
@@ -15,6 +19,7 @@ import {
 import { apl } from "../../lib/apl";
 import { createClient } from "../../lib/graphql";
 import { getAppIdFromApi } from "../../lib/utils";
+import { saleorApp } from "../../saleor-app";
 
 const CONFIGURATION_KEYS = [
   "PUBLIC_TOKEN",
@@ -100,7 +105,8 @@ const handler: Handler = async (request) => {
 
 export default withSentry(
   toNextHandler([
-    withRegisteredSaleorDomainHeader({ apl }),
+    withSaleorApp(saleorApp),
+    withRegisteredSaleorDomainHeader,
     withJWTVerified(getAppIdFromApi),
     handler,
   ])
