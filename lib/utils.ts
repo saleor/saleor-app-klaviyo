@@ -2,7 +2,7 @@ import { SALEOR_DOMAIN_HEADER } from "@saleor/app-sdk/const";
 import { Request } from "retes";
 
 import { FetchAppDetailsDocument } from "../generated/graphql";
-import { apl } from "./apl";
+import { saleorApp } from "../saleor-app";
 import { createClient } from "./graphql";
 
 export async function getAppIdFromApi(request: Request) {
@@ -13,7 +13,7 @@ export async function getAppIdFromApi(request: Request) {
     return undefined;
   }
 
-  const authData = await apl.get(saleorDomain as string);
+  const authData = await saleorApp.apl.get(saleorDomain as string);
 
   if (!authData) {
     return undefined;
