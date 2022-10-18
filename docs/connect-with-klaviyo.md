@@ -2,7 +2,7 @@
 
 ## Installation
 
-Follow [readme](../README.md) and deploy app. Then, install it in your Saleor Dashobard
+Follow [readme](../README.md) and deploy app. Then, install it in your Saleor Dashboard
 
 ## Creating Klaviyo account
 
@@ -36,10 +36,10 @@ Now, you can create your first flow
 
 1. Open the [flow creation page](https://www.klaviyo.com/flows/create).
 2. Click "Create from scratch" and name your flow.
-[](readme-assets/flow-creation.png)
+   [](readme-assets/flow-creation.png)
 3. Create a new trigger with "Metric".
-[](readme-assets/trigger-setup.png)
+   [](readme-assets/trigger-setup.png)
 4. Your freshly sent Metric should be available.
-[](readme-assets/trigger-metric.png)
+   [](readme-assets/trigger-metric.png)
 5. Now you can proceed to create your flow. Feel free to welcome your user.
-[](readme-assets/flow-screen.png)
+   [](readme-assets/flow-screen.png)
