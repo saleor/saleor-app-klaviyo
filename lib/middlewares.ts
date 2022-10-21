@@ -3,13 +3,13 @@ import { withSaleorDomainPresent } from "@saleor/app-sdk/middleware";
 import type { Middleware } from "retes";
 import { Response } from "retes/response";
 
-import { apl } from "./apl";
+import { saleorApp } from "../saleor-app";
 
 export const withSaleorDomainMatch: Middleware = (handler) =>
   withSaleorDomainPresent(async (request) => {
     const { [SALEOR_DOMAIN_HEADER]: saleorDomain } = request.headers;
 
-    const authData = await apl.get(saleorDomain as string);
+    const authData = await saleorApp.apl.get(saleorDomain as string);
     if (!authData) {
       throw Error(`Couldn't find auth data for domain ${saleorDomain}`);
     }

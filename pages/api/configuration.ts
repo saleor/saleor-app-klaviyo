@@ -16,7 +16,6 @@ import {
   MetadataItem,
   UpdateAppMetadataDocument,
 } from "../../generated/graphql";
-import { apl } from "../../lib/apl";
 import { createClient } from "../../lib/graphql";
 import { getAppIdFromApi } from "../../lib/utils";
 import { saleorApp } from "../../saleor-app";
@@ -60,7 +59,7 @@ const prepareResponseFromMetadata = (input: MetadataItem[]) => {
 
 const handler: Handler = async (request) => {
   const saleorDomain = request.headers[SALEOR_DOMAIN_HEADER] as string;
-  const authData = await apl.get(saleorDomain);
+  const authData = await saleorApp.apl.get(saleorDomain);
 
   if (!authData) {
     console.debug(`Could not find auth data for the domain ${saleorDomain}.`);

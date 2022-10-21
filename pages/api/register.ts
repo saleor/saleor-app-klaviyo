@@ -1,10 +1,10 @@
 import { createAppRegisterHandler } from "@saleor/app-sdk/handlers/next";
 import { withSentry } from "@sentry/nextjs";
 
-import { apl } from "../../lib/apl";
+import { saleorApp } from "../../saleor-app";
 
 const handler = createAppRegisterHandler({
-  apl,
+  apl: saleorApp.apl,
 });
 
 export default withSentry(handler);
