@@ -1,5 +1,6 @@
-import { AppManifest, inferWebhooks } from "@saleor/app-sdk";
 import { createManifestHandler } from "@saleor/app-sdk/handlers/next";
+import { inferWebhooks } from "@saleor/app-sdk/infer-webhooks";
+import { AppManifest } from "@saleor/app-sdk/types";
 import { withSentry } from "@sentry/nextjs";
 
 import * as GeneratedGraphQL from "../../generated/graphql";
