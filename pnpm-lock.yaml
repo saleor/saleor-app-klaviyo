@@ -12,11 +12,7 @@ specifiers:
   '@material-ui/core': ^4.12.4
   '@material-ui/icons': ^4.11.3
   '@material-ui/lab': 4.0.0-alpha.61
-<<<<<<< HEAD
   '@saleor/app-sdk': ~0.23.0
-=======
-  '@saleor/app-sdk': ~0.18.0
->>>>>>> canary
   '@saleor/macaw-ui': ^0.6.3
   '@sentry/nextjs': ^7.6.0
   '@types/jsonwebtoken': ^8.5.8
@@ -59,11 +55,7 @@ dependencies:
   '@material-ui/core': 4.12.4_twyhzqqpkwvvgrmyeapdo6i4my
   '@material-ui/icons': 4.11.3_xfab57qepcdrxdxif4xlv2kdgm
   '@material-ui/lab': 4.0.0-alpha.61_xfab57qepcdrxdxif4xlv2kdgm
-<<<<<<< HEAD
   '@saleor/app-sdk': 0.23.0_azq6kxkn3od7qdylwkyksrwopy
-=======
-  '@saleor/app-sdk': 0.18.0_azq6kxkn3od7qdylwkyksrwopy
->>>>>>> canary
   '@saleor/macaw-ui': 0.6.4_5j6zkq4mzir5org5dcu2pr43hm
   '@sentry/nextjs': 7.9.0_next@12.3.1+react@18.2.0
   '@types/lodash.snakecase': 4.1.7
@@ -1716,13 +1708,8 @@ packages:
       tslib: 2.4.0
     dev: true
 
-<<<<<<< HEAD
   /@saleor/app-sdk/0.23.0_azq6kxkn3od7qdylwkyksrwopy:
     resolution: {integrity: sha512-tlSwuMhK0CsPI+HoEPZny4hnpUWLd2uPtKH1I0B3z6/Smv8VPUV4bSEKVsPseZ97KQG472yDDaqmSzsZyo43nQ==}
-=======
-  /@saleor/app-sdk/0.18.0_azq6kxkn3od7qdylwkyksrwopy:
-    resolution: {integrity: sha512-kWclPx9738cG7n7bI5P85wrOnCVdkMRuViICygt7xwDlt9IIncMGUwaR07zQ8uCUTvMoesEO96J36d5OGM/QJA==}
->>>>>>> canary
     peerDependencies:
       next: '>=12'
       react: '>=17'
