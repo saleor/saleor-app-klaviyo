@@ -4,7 +4,7 @@ import { AppManifest } from "@saleor/app-sdk/types";
 import { withSentry } from "@sentry/nextjs";
 
 import * as GeneratedGraphQL from "../../generated/graphql";
-import { name, version } from "../../package.json";
+import pkg from "../../package.json";
 
 const handler = createManifestHandler({
   async manifestFactory(context): Promise<AppManifest> {
@@ -14,8 +14,8 @@ const handler = createManifestHandler({
 
     return {
       id: "saleor.app.klaviyo",
-      version,
-      name,
+      version: pkg.version,
+      name: pkg.name,
       permissions: ["MANAGE_USERS", "MANAGE_ORDERS"],
       appUrl: appBaseUrl,
       tokenTargetUrl: `${appBaseUrl}/api/register`,

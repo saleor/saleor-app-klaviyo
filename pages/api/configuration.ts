@@ -1,4 +1,4 @@
-import { SALEOR_DOMAIN_HEADER } from "@saleor/app-sdk/const";
+import { SALEOR_API_URL_HEADER } from "@saleor/app-sdk/const";
 import {
   withJWTVerified,
   withRegisteredSaleorDomainHeader,
@@ -58,15 +58,15 @@ const prepareResponseFromMetadata = (input: MetadataItem[]) => {
 };
 
 const handler: Handler = async (request) => {
-  const saleorDomain = request.headers[SALEOR_DOMAIN_HEADER] as string;
-  const authData = await saleorApp.apl.get(saleorDomain);
+  const saleorApiUrl = request.headers[SALEOR_API_URL_HEADER] as string;
+  const authData = await saleorApp.apl.get(saleorApiUrl);
 
   if (!authData) {
-    console.debug(`Could not find auth data for the domain ${saleorDomain}.`);
+    console.debug(`Could not find auth data for the domain ${saleorApiUrl}.`);
     return Response.Forbidden();
   }
 
-  const client = createClient(`https://${saleorDomain}/graphql/`, async () =>
+  const client = createClient(authData.saleorApiUrl, async () =>
     Promise.resolve({ token: authData.token })
   );
 
