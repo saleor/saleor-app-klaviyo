@@ -1,14 +1,7 @@
 import { SALEOR_API_URL_HEADER } from "@saleor/app-sdk/const";
-import {
-  withJWTVerified,
-  withRegisteredSaleorDomainHeader,
-  withSaleorApp,
-} from "@saleor/app-sdk/middleware";
+import { createProtectedHandler, NextProtectedApiHandler } from "@saleor/app-sdk/handlers/next";
 import { withSentry } from "@sentry/nextjs";
 import snakeCase from "lodash.snakecase";
-import type { Handler } from "retes";
-import { toNextHandler } from "retes/adapter";
-import { Response } from "retes/response";
 
 import {
   FetchAppDetailsDocument,
@@ -17,7 +10,6 @@ import {
   UpdateAppMetadataDocument,
 } from "../../generated/graphql";
 import { createClient } from "../../lib/graphql";
-import { getAppIdFromApi } from "../../lib/utils";
 import { saleorApp } from "../../saleor-app";
 
 const CONFIGURATION_KEYS = [
@@ -57,13 +49,13 @@ const prepareResponseFromMetadata = (input: MetadataItem[]) => {
   return output.map(({ key, value }) => ({ key, value }));
 };
 
-const handler: Handler = async (request) => {
+const handler: NextProtectedApiHandler = async (request, res, ctx) => {
   const saleorApiUrl = request.headers[SALEOR_API_URL_HEADER] as string;
-  const authData = await saleorApp.apl.get(saleorApiUrl);
+  const { authData } = ctx;
 
   if (!authData) {
     console.debug(`Could not find auth data for the domain ${saleorApiUrl}.`);
-    return Response.Forbidden();
+    return res.status(403).end();
   }
 
   const client = createClient(authData.saleorApiUrl, async () =>
@@ -76,7 +68,7 @@ const handler: Handler = async (request) => {
       privateMetadata = (await client.query(FetchAppDetailsDocument).toPromise()).data?.app
         ?.privateMetadata!;
 
-      return Response.OK({
+      return res.json({
         success: true,
         data: prepareResponseFromMetadata(privateMetadata),
       });
@@ -92,21 +84,15 @@ const handler: Handler = async (request) => {
           .toPromise()
       ).data?.updatePrivateMetadata?.item?.privateMetadata!;
 
-      return Response.OK({
+      return res.json({
         success: true,
         data: prepareResponseFromMetadata(privateMetadata),
       });
     }
     default:
-      return Response.MethodNotAllowed();
+      return res.status(405).end();
   }
 };
 
-export default withSentry(
-  toNextHandler([
-    withSaleorApp(saleorApp),
-    withRegisteredSaleorDomainHeader,
-    withJWTVerified(getAppIdFromApi),
-    handler,
-  ])
-);
+// export default withSentry(createProtectedHandler(handler, saleorApp.apl));
+export default createProtectedHandler(handler, saleorApp.apl);

@@ -1,4 +1,4 @@
-import { SALEOR_DOMAIN_HEADER } from "@saleor/app-sdk/const";
+import { SALEOR_API_URL_HEADER } from "@saleor/app-sdk/const";
 import { SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
 import { withSentry } from "@sentry/nextjs";
 import type { Handler } from "retes";
@@ -18,9 +18,9 @@ export const fulfillmentCreatedWebhook = new SaleorAsyncWebhook<unknown>({
 });
 
 const handler: Handler = async (request) => {
-  const saleorDomain = request.headers[SALEOR_DOMAIN_HEADER];
-  const klaviyoToken = await getValue(saleorDomain as string, "PUBLIC_TOKEN");
-  const klaviyoMetric = await getValue(saleorDomain as string, "FULFILLMENT_CREATED_METRIC");
+  const saleorApiUrl = request.headers[SALEOR_API_URL_HEADER];
+  const klaviyoToken = await getValue(saleorApiUrl as string, "PUBLIC_TOKEN");
+  const klaviyoMetric = await getValue(saleorApiUrl as string, "FULFILLMENT_CREATED_METRIC");
   const context = request.params;
   const { userEmail } = context.order;
 
