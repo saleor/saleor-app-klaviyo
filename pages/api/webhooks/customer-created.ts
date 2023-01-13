@@ -9,7 +9,7 @@ import Klaviyo from "../../../lib/klaviyo";
 import { getValue } from "../../../lib/metadata";
 import { saleorApp } from "../../../saleor-app";
 
-export const invoiceRequestedWebhook = new SaleorAsyncWebhook<unknown>({
+export const customerCreatedWebhook = new SaleorAsyncWebhook<unknown>({
   name: "Customer Created",
   webhookPath: "api/webhooks/customer-created",
   asyncEvent: "CUSTOMER_CREATED",
@@ -43,7 +43,7 @@ const handler: Handler = async (request) => {
 
 const wrappedHandler = withSentry(toNextHandler([handler]));
 
-export default invoiceRequestedWebhook.createHandler(wrappedHandler);
+export default customerCreatedWebhook.createHandler(wrappedHandler);
 
 export const config = {
   api: {

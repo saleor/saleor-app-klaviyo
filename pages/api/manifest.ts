@@ -3,7 +3,10 @@ import { AppManifest } from "@saleor/app-sdk/types";
 import { withSentry } from "@sentry/nextjs";
 
 import pkg from "../../package.json";
-import { invoiceRequestedWebhook } from "./webhooks/customer-created";
+import { customerCreatedWebhook } from "./webhooks/customer-created";
+import { fulfillmentCreatedWebhook } from "./webhooks/fulfillment-created";
+import { orderCreatedWebhook } from "./webhooks/order-created";
+import { orderFullyPaidWebhook } from "./webhooks/order-fully-paid";
 
 const handler = createManifestHandler({
   async manifestFactory(context): Promise<AppManifest> {
@@ -16,7 +19,12 @@ const handler = createManifestHandler({
       permissions: ["MANAGE_USERS", "MANAGE_ORDERS"],
       appUrl: appBaseUrl,
       tokenTargetUrl: `${appBaseUrl}/api/register`,
-      webhooks: [invoiceRequestedWebhook.getWebhookManifest(appBaseUrl)],
+      webhooks: [
+        customerCreatedWebhook.getWebhookManifest(appBaseUrl),
+        fulfillmentCreatedWebhook.getWebhookManifest(appBaseUrl),
+        orderCreatedWebhook.getWebhookManifest(appBaseUrl),
+        orderFullyPaidWebhook.getWebhookManifest(appBaseUrl),
+      ],
     };
   },
 });

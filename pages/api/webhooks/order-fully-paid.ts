@@ -1,5 +1,5 @@
 import { SALEOR_DOMAIN_HEADER } from "@saleor/app-sdk/const";
-import { withSaleorEventMatch, withWebhookSignatureVerified } from "@saleor/app-sdk/middleware";
+import { SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
 import { withSentry } from "@sentry/nextjs";
 import type { Handler } from "retes";
 import { toNextHandler } from "retes/adapter";
@@ -7,7 +7,15 @@ import { Response } from "retes/response";
 
 import Klaviyo from "../../../lib/klaviyo";
 import { getValue } from "../../../lib/metadata";
-import { withSaleorDomainMatch } from "../../../lib/middlewares";
+import { saleorApp } from "../../../saleor-app";
+
+export const orderFullyPaidWebhook = new SaleorAsyncWebhook<unknown>({
+  name: "Order Fully Paid",
+  webhookPath: "api/webhooks/order-fully-paid",
+  asyncEvent: "ORDER_FULLY_PAID",
+  apl: saleorApp.apl,
+  query: "{}",
+});
 
 const handler: Handler = async (request) => {
   const saleorDomain = request.headers[SALEOR_DOMAIN_HEADER];
@@ -33,14 +41,9 @@ const handler: Handler = async (request) => {
   return Response.OK({ success: true, message: "Message sent!" });
 };
 
-export default withSentry(
-  toNextHandler([
-    withSaleorDomainMatch,
-    withSaleorEventMatch("order_fully_paid"),
-    withWebhookSignatureVerified(),
-    handler,
-  ])
-);
+const wrappedHandler = withSentry(toNextHandler([handler]));
+
+export default orderFullyPaidWebhook.createHandler(wrappedHandler);
 
 export const config = {
   api: {
