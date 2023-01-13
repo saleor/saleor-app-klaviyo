@@ -1,6 +1,5 @@
 import { SALEOR_API_URL_HEADER } from "@saleor/app-sdk/const";
 import { createProtectedHandler, NextProtectedApiHandler } from "@saleor/app-sdk/handlers/next";
-import { withSentry } from "@sentry/nextjs";
 import snakeCase from "lodash.snakecase";
 
 import {

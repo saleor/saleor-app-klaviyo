@@ -6,7 +6,7 @@ subscription FulfillmentCreatedSubscription {
         id
         warehouse {
           address {
-            ... AddressFragment
+            ...AddressFragment
           }
         }
         lines {
@@ -19,19 +19,19 @@ subscription FulfillmentCreatedSubscription {
             productSku
             productVariantId
             unitPrice {
-              ... TaxedMoneyFragment
+              ...TaxedMoneyFragment
             }
             undiscountedUnitPrice {
-              ... TaxedMoneyFragment
+              ...TaxedMoneyFragment
             }
             totalPrice {
-              ... TaxedMoneyFragment
+              ...TaxedMoneyFragment
             }
           }
         }
       }
       order {
-        ... OrderFragment
+        ...OrderFragment
       }
     }
   }
