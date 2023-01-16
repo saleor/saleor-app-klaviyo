@@ -1,9 +1,9 @@
 fragment TaxedMoneyFragment on TaxedMoney {
   currency
   net {
-    ... MoneyFragment
+    ...MoneyFragment
   }
   gross {
-    ... MoneyFragment
+    ...MoneyFragment
   }
 }

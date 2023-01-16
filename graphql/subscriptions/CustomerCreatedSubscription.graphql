@@ -5,19 +5,19 @@ subscription CustomerCreatedSubscription {
         __typename
         id
         defaultShippingAddress {
-          ... AddressFragment
+          ...AddressFragment
         }
         defaultBillingAddress {
-          ... AddressFragment
+          ...AddressFragment
         }
         addresses {
-          ... AddressFragment
+          ...AddressFragment
         }
         privateMetadata {
-          ... MetadataFragment
+          ...MetadataFragment
         }
         metadata {
-          ... MetadataFragment
+          ...MetadataFragment
         }
         email
         firstName

@@ -1,5 +1,5 @@
 import { useAppBridge } from "@saleor/app-sdk/app-bridge";
-import { SALEOR_DOMAIN_HEADER } from "@saleor/app-sdk/const";
+import { SALEOR_API_URL_HEADER, SALEOR_AUTHORIZATION_BEARER_HEADER } from "@saleor/app-sdk/const";
 import { useEffect, useState } from "react";
 
 type Options = Record<string, string>;
@@ -18,11 +18,11 @@ const useAppApi = ({ url, options, skip }: UseFetchProps) => {
   const [error, setError] = useState<unknown>();
   const [loading, setLoading] = useState(false);
 
-  const fetchOptions = {
+  const fetchOptions: RequestInit = {
     ...options,
     headers: [
-      [SALEOR_DOMAIN_HEADER, appBridgeState?.domain!],
-      ["authorization-bearer", appBridgeState?.token!],
+      [SALEOR_API_URL_HEADER, appBridgeState?.saleorApiUrl!],
+      [SALEOR_AUTHORIZATION_BEARER_HEADER, appBridgeState?.token!],
     ],
   };
 
