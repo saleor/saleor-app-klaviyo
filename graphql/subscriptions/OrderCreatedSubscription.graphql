@@ -2,7 +2,7 @@ subscription OrderCreatedSubscription {
   event {
     ... on OrderCreated {
       order {
-        ... OrderFragment
+        ...OrderFragment
       }
     }
   }

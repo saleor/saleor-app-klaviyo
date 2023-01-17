@@ -1,5 +1,5 @@
-import { SALEOR_DOMAIN_HEADER } from "@saleor/app-sdk/const";
-import { withSaleorEventMatch, withWebhookSignatureVerified } from "@saleor/app-sdk/middleware";
+import { SALEOR_API_URL_HEADER } from "@saleor/app-sdk/const";
+import { SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
 import { withSentry } from "@sentry/nextjs";
 import type { Handler } from "retes";
 import { toNextHandler } from "retes/adapter";
@@ -7,12 +7,20 @@ import { Response } from "retes/response";
 
 import Klaviyo from "../../../lib/klaviyo";
 import { getValue } from "../../../lib/metadata";
-import { withSaleorDomainMatch } from "../../../lib/middlewares";
+import { saleorApp } from "../../../saleor-app";
+
+export const orderCreatedWebhook = new SaleorAsyncWebhook<unknown>({
+  name: "Order Created",
+  webhookPath: "api/webhooks/order-created",
+  asyncEvent: "ORDER_CREATED",
+  apl: saleorApp.apl,
+  query: "{}",
+});
 
 const handler: Handler = async (request) => {
-  const saleorDomain = request.headers[SALEOR_DOMAIN_HEADER] as string;
-  const klaviyoToken = await getValue(saleorDomain, "PUBLIC_TOKEN");
-  const klaviyoMetric = await getValue(saleorDomain, "ORDER_CREATED_METRIC");
+  const saleorApiUrl = request.headers[SALEOR_API_URL_HEADER] as string;
+  const klaviyoToken = await getValue(saleorApiUrl, "PUBLIC_TOKEN");
+  const klaviyoMetric = await getValue(saleorApiUrl, "ORDER_CREATED_METRIC");
   const context = request.params;
   const { userEmail } = context.order;
 
@@ -33,14 +41,9 @@ const handler: Handler = async (request) => {
   return Response.OK({ success: true, message: "Message sent!" });
 };
 
-export default withSentry(
-  toNextHandler([
-    withSaleorDomainMatch,
-    withSaleorEventMatch("order_created"),
-    withWebhookSignatureVerified(),
-    handler,
-  ])
-);
+const wrappedHandler = withSentry(toNextHandler([handler]));
+
+export default orderCreatedWebhook.createHandler(wrappedHandler);
 
 export const config = {
   api: {

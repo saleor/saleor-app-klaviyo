@@ -13,10 +13,10 @@ fragment OrderFragment on Order {
     name
   }
   shippingAddress {
-    ... AddressFragment
+    ...AddressFragment
   }
   billingAddress {
-    ... AddressFragment
+    ...AddressFragment
   }
   discounts {
     id
@@ -30,8 +30,8 @@ fragment OrderFragment on Order {
     id
     productVariantId
     totalPrice {
-      ... TaxedMoneyFragment
-      }
+      ...TaxedMoneyFragment
+    }
     allocations {
       quantity
       warehouse {
@@ -48,10 +48,10 @@ fragment OrderFragment on Order {
     unitDiscountType
     unitDiscountReason
     unitPrice {
-      ... TaxedMoneyFragment
+      ...TaxedMoneyFragment
     }
     undiscountedUnitPrice {
-      ... TaxedMoneyFragment
+      ...TaxedMoneyFragment
     }
     taxRate
   }
@@ -59,13 +59,13 @@ fragment OrderFragment on Order {
     id
   }
   payments {
-    ... PaymentFragment
+    ...PaymentFragment
   }
   privateMetadata {
-    ... MetadataFragment
+    ...MetadataFragment
   }
   metadata {
-    ... MetadataFragment
+    ...MetadataFragment
   }
   status
   languageCodeEnum
@@ -73,14 +73,14 @@ fragment OrderFragment on Order {
   shippingMethodName
   collectionPointName
   shippingPrice {
-    ... TaxedMoneyFragment
+    ...TaxedMoneyFragment
   }
   shippingTaxRate
   total {
-    ... TaxedMoneyFragment
+    ...TaxedMoneyFragment
   }
   undiscountedTotal {
-    ... TaxedMoneyFragment
+    ...TaxedMoneyFragment
   }
   weight {
     value
