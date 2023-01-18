@@ -1,19 +1,72 @@
 import { NextWebhookApiHandler, SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
+import { gql } from "urql";
 
+import { FulfillmentCreatedWebhookPayloadFragment } from "../../../generated/graphql";
 import { createClient } from "../../../lib/graphql";
 import Klaviyo from "../../../lib/klaviyo";
 import { createSettingsManager } from "../../../lib/metadata";
 import { saleorApp } from "../../../saleor-app";
 
-export const fulfillmentCreatedWebhook = new SaleorAsyncWebhook<unknown>({
-  name: "Fulfillment Created",
-  webhookPath: "api/webhooks/fulfillment-created",
-  asyncEvent: "FULFILLMENT_CREATED",
-  apl: saleorApp.apl,
-  query: "{}",
-});
+const FulfillmentCreatedWebhookPayload = gql`
+  fragment FulfillmentCreatedWebhookPayload on FulfillmentCreated {
+    fulfillment {
+      __typename
+      id
+      warehouse {
+        address {
+          ...AddressFragment
+        }
+      }
+      lines {
+        __typename
+        id
+        quantity
+        orderLine {
+          productName
+          variantName
+          productSku
+          productVariantId
+          unitPrice {
+            ...TaxedMoneyFragment
+          }
+          undiscountedUnitPrice {
+            ...TaxedMoneyFragment
+          }
+          totalPrice {
+            ...TaxedMoneyFragment
+          }
+        }
+      }
+    }
+    order {
+      ...OrderFragment
+    }
+  }
+`;
 
-const handler: NextWebhookApiHandler<any> = async (req, res, context) => {
+const FulfillmentCreatedGraphqlSubscription = gql`
+  ${FulfillmentCreatedWebhookPayload}
+  subscription FulfillmentCreated {
+    event {
+      ...FulfillmentCreatedWebhookPayload
+    }
+  }
+`;
+
+export const fulfillmentCreatedWebhook =
+  new SaleorAsyncWebhook<FulfillmentCreatedWebhookPayloadFragment>({
+    name: "Fulfillment Created",
+    webhookPath: "api/webhooks/fulfillment-created",
+    asyncEvent: "FULFILLMENT_CREATED",
+    apl: saleorApp.apl,
+    subscriptionQueryAst: FulfillmentCreatedGraphqlSubscription,
+  });
+
+const handler: NextWebhookApiHandler<FulfillmentCreatedWebhookPayloadFragment> = async (
+  req,
+  res,
+  context
+) => {
   const { payload, authData } = context;
   const { saleorApiUrl, token, appId } = authData;
   const client = createClient(saleorApiUrl, async () => Promise.resolve({ token }));
@@ -25,7 +78,7 @@ const handler: NextWebhookApiHandler<any> = async (req, res, context) => {
     return res.status(400).json({ success: false, message: "App not configured." });
   }
 
-  const { userEmail } = payload.order;
+  const { userEmail } = payload.order || {};
 
   if (!userEmail) {
     return res.status(400).json({ success: false, message: "No user email." });
