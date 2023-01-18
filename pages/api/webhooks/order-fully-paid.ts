@@ -1,7 +1,10 @@
 import { NextWebhookApiHandler, SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
 import { gql } from "urql";
 
-import { OrderFullyPaidWebhookPayloadFragment } from "../../../generated/graphql";
+import {
+  OrderFullyPaidWebhookPayloadFragment,
+  UntypedOrderFullyPaidSubscriptionDocument,
+} from "../../../generated/graphql";
 import { createClient } from "../../../lib/graphql";
 import Klaviyo from "../../../lib/klaviyo";
 import { createSettingsManager } from "../../../lib/metadata";
@@ -15,7 +18,7 @@ const OrderFullyPaidWebhookPayload = gql`
   }
 `;
 
-const OrderFullyPaidGraphqlSubscription = gql`
+export const OrderFullyPaidGraphqlSubscription = gql`
   ${OrderFullyPaidWebhookPayload}
   subscription OrderFullyPaid {
     event {
@@ -29,7 +32,7 @@ export const orderFullyPaidWebhook = new SaleorAsyncWebhook<OrderFullyPaidWebhoo
   webhookPath: "api/webhooks/order-fully-paid",
   asyncEvent: "ORDER_FULLY_PAID",
   apl: saleorApp.apl,
-  subscriptionQueryAst: OrderFullyPaidGraphqlSubscription,
+  subscriptionQueryAst: UntypedOrderFullyPaidSubscriptionDocument,
 });
 
 const handler: NextWebhookApiHandler<OrderFullyPaidWebhookPayloadFragment> = async (
