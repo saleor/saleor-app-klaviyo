@@ -3,7 +3,7 @@ import { gql } from "urql";
 
 import {
   CustomerCreatedWebhookPayloadFragment,
-  UntypedCustomerCreatedSubscriptionDocument,
+  UntypedCustomerCreatedDocument,
 } from "../../../generated/graphql";
 import { createClient } from "../../../lib/graphql";
 import Klaviyo from "../../../lib/klaviyo";
@@ -55,7 +55,7 @@ export const customerCreatedWebhook = new SaleorAsyncWebhook<CustomerCreatedWebh
     webhookPath: "api/webhooks/customer-created",
     asyncEvent: "CUSTOMER_CREATED",
     apl: saleorApp.apl,
-    subscriptionQueryAst: UntypedCustomerCreatedSubscriptionDocument,
+    subscriptionQueryAst: UntypedCustomerCreatedDocument,
   }
 );
 
