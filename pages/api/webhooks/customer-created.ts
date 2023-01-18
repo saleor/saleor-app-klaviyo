@@ -61,8 +61,9 @@ const handler: NextWebhookApiHandler<CustomerCreatedWebhookPayloadFragment> = as
   res,
   context
 ) => {
-  const { payload, authData } = context;
+  console.debug("customerCreatedWebhook handler called");
 
+  const { payload, authData } = context;
   const { saleorApiUrl, token, appId } = authData;
   const client = createClient(saleorApiUrl, async () => Promise.resolve({ token }));
   const settings = createSettingsManager(client, appId);
@@ -71,12 +72,14 @@ const handler: NextWebhookApiHandler<CustomerCreatedWebhookPayloadFragment> = as
   const klaviyoMetric = await settings.get("CUSTOMER_CREATED_METRIC");
 
   if (!klaviyoToken || !klaviyoMetric) {
+    console.debug("Request rejected - app not configured");
     return res.status(400).json({ success: false, message: "App not configured." });
   }
 
   const userEmail = payload.user?.email;
 
   if (!userEmail) {
+    console.debug("Request rejected - missing user email");
     return res.status(400).json({ success: false, message: "No user email." });
   }
 
@@ -85,11 +88,15 @@ const handler: NextWebhookApiHandler<CustomerCreatedWebhookPayloadFragment> = as
 
   if (klaviyoResponse.status !== 200) {
     const klaviyoMessage = ` Message: ${(await klaviyoResponse.json())?.message}.` || "";
+    console.debug("Klaviyo returned error: ", klaviyoMessage);
+
     return res.status(500).json({
       success: false,
       message: `Klaviyo API responded with status ${klaviyoResponse.status}.${klaviyoMessage}`,
     });
   }
+
+  console.debug("Webhook processed successfully");
   return res.status(200).json({ success: true, message: "Message sent!" });
 };
 
