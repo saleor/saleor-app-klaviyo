@@ -4,6 +4,7 @@ import { withSentry } from "@sentry/nextjs";
 import type { Handler } from "retes";
 import { toNextHandler } from "retes/adapter";
 import { Response } from "retes/response";
+import { gql } from "urql";
 
 import Klaviyo from "../../../lib/klaviyo";
 import { getValue } from "../../../lib/metadata";
@@ -14,7 +15,13 @@ export const customerCreatedWebhook = new SaleorAsyncWebhook<unknown>({
   webhookPath: "api/webhooks/customer-created",
   asyncEvent: "CUSTOMER_CREATED",
   apl: saleorApp.apl,
-  query: "{}",
+  subscriptionQueryAst: gql`
+    subscription {
+      event {
+        version
+      }
+    }
+  `,
 });
 
 const handler: Handler = async (request) => {
