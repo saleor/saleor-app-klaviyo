@@ -1,19 +1,42 @@
 import { NextWebhookApiHandler, SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
+import { gql } from "urql";
 
+import { OrderFullyPaidWebhookPayloadFragment } from "../../../generated/graphql";
 import { createClient } from "../../../lib/graphql";
 import Klaviyo from "../../../lib/klaviyo";
 import { createSettingsManager } from "../../../lib/metadata";
 import { saleorApp } from "../../../saleor-app";
 
-export const orderFullyPaidWebhook = new SaleorAsyncWebhook<unknown>({
+const OrderFullyPaidWebhookPayload = gql`
+  fragment OrderFullyPaidWebhookPayload on OrderFullyPaid {
+    order {
+      ...OrderFragment
+    }
+  }
+`;
+
+const OrderFullyPaidGraphqlSubscription = gql`
+  ${OrderFullyPaidWebhookPayload}
+  subscription OrderFullyPaid {
+    event {
+      ...OrderFullyPaidWebhookPayload
+    }
+  }
+`;
+
+export const orderFullyPaidWebhook = new SaleorAsyncWebhook<OrderFullyPaidWebhookPayloadFragment>({
   name: "Order Fully Paid",
   webhookPath: "api/webhooks/order-fully-paid",
   asyncEvent: "ORDER_FULLY_PAID",
   apl: saleorApp.apl,
-  query: "{}",
+  subscriptionQueryAst: OrderFullyPaidGraphqlSubscription,
 });
 
-const handler: NextWebhookApiHandler<any> = async (req, res, context) => {
+const handler: NextWebhookApiHandler<OrderFullyPaidWebhookPayloadFragment> = async (
+  req,
+  res,
+  context
+) => {
   const { payload, authData } = context;
   const { saleorApiUrl, token, appId } = authData;
   const client = createClient(saleorApiUrl, async () => Promise.resolve({ token }));
@@ -25,7 +48,7 @@ const handler: NextWebhookApiHandler<any> = async (req, res, context) => {
     return res.status(400).json({ success: false, message: "App not configured." });
   }
 
-  const { userEmail } = payload.order;
+  const { userEmail } = payload.order || {};
 
   if (!userEmail) {
     return res.status(400).json({ success: false, message: "No user email." });
