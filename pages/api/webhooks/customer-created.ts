@@ -1,7 +1,10 @@
 import { NextWebhookApiHandler, SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
 import { gql } from "urql";
 
-import { CustomerCreatedWebhookPayloadFragment } from "../../../generated/graphql";
+import {
+  CustomerCreatedWebhookPayloadFragment,
+  UntypedCustomerCreatedSubscriptionDocument,
+} from "../../../generated/graphql";
 import { createClient } from "../../../lib/graphql";
 import Klaviyo from "../../../lib/klaviyo";
 import { createSettingsManager } from "../../../lib/metadata";
@@ -37,7 +40,7 @@ const CustomerCreatedWebhookPayload = gql`
   }
 `;
 
-const CustomerCreatedGraphqlSubscription = gql`
+export const CustomerCreatedGraphqlSubscription = gql`
   ${CustomerCreatedWebhookPayload}
   subscription CustomerCreated {
     event {
@@ -52,7 +55,7 @@ export const customerCreatedWebhook = new SaleorAsyncWebhook<CustomerCreatedWebh
     webhookPath: "api/webhooks/customer-created",
     asyncEvent: "CUSTOMER_CREATED",
     apl: saleorApp.apl,
-    subscriptionQueryAst: CustomerCreatedGraphqlSubscription,
+    subscriptionQueryAst: UntypedCustomerCreatedSubscriptionDocument,
   }
 );
 
