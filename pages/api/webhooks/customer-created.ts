@@ -1,5 +1,4 @@
 import { NextWebhookApiHandler, SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
-import { gql } from "urql";
 
 import { createClient } from "../../../lib/graphql";
 import Klaviyo from "../../../lib/klaviyo";
@@ -11,13 +10,7 @@ export const customerCreatedWebhook = new SaleorAsyncWebhook<unknown>({
   webhookPath: "api/webhooks/customer-created",
   asyncEvent: "CUSTOMER_CREATED",
   apl: saleorApp.apl,
-  subscriptionQueryAst: gql`
-    subscription {
-      event {
-        version
-      }
-    }
-  `,
+  query: "{}",
 });
 
 const handler: NextWebhookApiHandler<any> = async (req, res, context) => {
