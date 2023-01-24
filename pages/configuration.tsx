@@ -48,6 +48,9 @@ function Configuration() {
     }
   }, [configurationData, configuration]);
 
+  /**
+   * TODO Rewrite to tRPC
+   */
   const handleSubmit = (event: SyntheticEvent) => {
     event.preventDefault();
     setTransitionState("loading");
@@ -62,7 +65,11 @@ function Configuration() {
       body: JSON.stringify({ data: configuration }),
     })
       .then(async (response) => {
-        setTransitionState(response.status === 200 ? "success" : "error");
+        if (response.status !== 200) {
+          throw new Error("Error saving configuration data");
+        }
+        setTransitionState("success");
+
         await notify({
           status: "success",
           title: "Success",
@@ -73,7 +80,7 @@ function Configuration() {
         setTransitionState("error");
         await notify({
           status: "error",
-          title: "Configuration update failed",
+          title: "Configuration update failed. Ensure fields are filled correctly",
         });
       });
   };
