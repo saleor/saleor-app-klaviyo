@@ -80,7 +80,8 @@ function Configuration() {
         setTransitionState("error");
         await notify({
           status: "error",
-          title: "Configuration update failed. Ensure fields are filled correctly",
+          title:
+            "Configuration update failed. Ensure fields are filled correctly and you have MANAGE_APPS permission",
         });
       });
   };

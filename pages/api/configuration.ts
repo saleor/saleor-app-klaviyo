@@ -59,4 +59,4 @@ const handler: NextProtectedApiHandler = async (request, res, ctx) => {
   }
 };
 
-export default createProtectedHandler(handler, saleorApp.apl);
+export default createProtectedHandler(handler, saleorApp.apl, ["MANAGE_APPS"]);
