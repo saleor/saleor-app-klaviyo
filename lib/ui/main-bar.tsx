@@ -26,6 +26,9 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: 500,
     margin: 0,
   },
+  bottomMargin: {
+    marginBottom: 32,
+  },
 }));
 
 type Props = {
@@ -33,13 +36,26 @@ type Props = {
   author: string;
   rightColumnContent?: ReactNode;
   icon?: ReactNode;
+  bottomMargin?: boolean;
 } & PaperProps;
 
-export function MainBar({ name, author, rightColumnContent, className, icon }: Props) {
+export function MainBar({
+  name,
+  author,
+  rightColumnContent,
+  className,
+  icon,
+  bottomMargin,
+}: Props) {
   const styles = useStyles();
 
   return (
-    <Paper elevation={0} className={clsx(styles.root, className)}>
+    <Paper
+      elevation={0}
+      className={clsx(styles.root, className, {
+        [styles.bottomMargin]: bottomMargin,
+      })}
+    >
       {icon && <div className={styles.iconColumn}>{icon}</div>}
       <div className={styles.leftColumn}>
         <h1 className={styles.appName}>{name}</h1>
