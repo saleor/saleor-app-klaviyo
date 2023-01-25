@@ -1,20 +1,9 @@
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  Link,
-  List,
-  ListItem,
-  Paper,
-  PaperProps,
-  TextField,
-  Typography,
-} from "@material-ui/core";
+import { Link, List, ListItem, Paper, PaperProps, TextField, Typography } from "@material-ui/core";
 import Skeleton from "@material-ui/lab/Skeleton";
 import { useAppBridge, withAuthorization } from "@saleor/app-sdk/app-bridge";
 import { SALEOR_API_URL_HEADER, SALEOR_AUTHORIZATION_BEARER_HEADER } from "@saleor/app-sdk/const";
 import { ConfirmButton, ConfirmButtonTransitionState, makeStyles } from "@saleor/macaw-ui";
-import { ChangeEvent, ReactElement, SyntheticEvent, useEffect, useState } from "react";
+import { ChangeEvent, SyntheticEvent, useEffect, useState } from "react";
 
 import AccessWarning from "../components/AccessWarning/AccessWarning";
 import useAppApi from "../hooks/useAppApi";
