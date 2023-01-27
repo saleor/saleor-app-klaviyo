@@ -20,13 +20,23 @@ interface PostRequestBody {
 }
 
 const getAppSettings = async (settingsManager: EncryptedMetadataManager) => [
-  { key: "CUSTOMER_CREATED_METRIC", value: await settingsManager.get("CUSTOMER_CREATED_METRIC") },
+  {
+    key: "CUSTOMER_CREATED_METRIC",
+    value: (await settingsManager.get("CUSTOMER_CREATED_METRIC")) ?? "CUSTOMER_CREATED_METRIC",
+  },
   {
     key: "FULFILLMENT_CREATED_METRIC",
-    value: await settingsManager.get("FULFILLMENT_CREATED_METRIC"),
+    value:
+      (await settingsManager.get("FULFILLMENT_CREATED_METRIC")) ?? "FULFILLMENT_CREATED_METRIC",
   },
-  { key: "ORDER_CREATED_METRIC", value: await settingsManager.get("ORDER_CREATED_METRIC") },
-  { key: "ORDER_FULLY_PAID_METRIC", value: await settingsManager.get("ORDER_FULLY_PAID_METRIC") },
+  {
+    key: "ORDER_CREATED_METRIC",
+    value: (await settingsManager.get("ORDER_CREATED_METRIC")) ?? "ORDER_CREATED_METRIC",
+  },
+  {
+    key: "ORDER_FULLY_PAID_METRIC",
+    value: (await settingsManager.get("ORDER_FULLY_PAID_METRIC")) ?? "ORDER_FULLY_PAID_METRIC",
+  },
   { key: "PUBLIC_TOKEN", value: await settingsManager.get("PUBLIC_TOKEN") },
 ];
 
@@ -59,4 +69,4 @@ const handler: NextProtectedApiHandler = async (request, res, ctx) => {
   }
 };
 
-export default createProtectedHandler(handler, saleorApp.apl);
+export default createProtectedHandler(handler, saleorApp.apl, ["MANAGE_APPS"]);

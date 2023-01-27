@@ -1,20 +1,15 @@
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  List,
-  ListItem,
-  TextField,
-  Typography,
-} from "@material-ui/core";
+import { Link, List, ListItem, Paper, PaperProps, TextField, Typography } from "@material-ui/core";
 import Skeleton from "@material-ui/lab/Skeleton";
 import { useAppBridge, withAuthorization } from "@saleor/app-sdk/app-bridge";
 import { SALEOR_API_URL_HEADER, SALEOR_AUTHORIZATION_BEARER_HEADER } from "@saleor/app-sdk/const";
 import { ConfirmButton, ConfirmButtonTransitionState, makeStyles } from "@saleor/macaw-ui";
-import { ChangeEvent, ReactElement, SyntheticEvent, useEffect, useState } from "react";
+import { ChangeEvent, SyntheticEvent, useEffect, useState } from "react";
 
 import AccessWarning from "../components/AccessWarning/AccessWarning";
 import useAppApi from "../hooks/useAppApi";
+import { AppColumnsLayout } from "../lib/ui/app-columns-layout";
+import { AppIcon } from "../lib/ui/app-icon";
+import { MainBar } from "../lib/ui/main-bar";
 import useDashboardNotifier from "../utils/useDashboardNotifier";
 
 interface ConfigurationField {
@@ -30,6 +25,101 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: theme.spacing(2),
   },
 }));
+
+function Section(props: PaperProps) {
+  return <Paper style={{ padding: 24 }} elevation={0} {...props} />;
+}
+
+function Instructions() {
+  const { appBridge } = useAppBridge();
+
+  const openExternalUrl = (url: string) => {
+    // eslint-disable-next-line
+    appBridge?.dispatch({
+      type: "redirect",
+      payload: {
+        newContext: true,
+        actionId: "redirect_from_klaviyo_app",
+        to: url,
+      },
+    });
+  };
+
+  return (
+    <Section>
+      <Typography paragraph variant="h3">
+        How to set up
+      </Typography>
+      <Typography paragraph>
+        App will send events as Klaviyo metrics each time Saleor Event occurs.
+      </Typography>
+      <Typography paragraph>
+        When first metric is sent, it should be available in Klaviyo to build on top of.
+      </Typography>
+      <Typography paragraph>
+        Metric name can be customized, PUBLIC_TOKEN must be provided to enable the app.
+      </Typography>
+      <Typography variant="h3">Useful links</Typography>
+      <List>
+        <ListItem>
+          <Link
+            onClick={(e) => {
+              e.preventDefault();
+
+              openExternalUrl("https://github.com/saleor/saleor-app-klaviyo");
+            }}
+            href="https://github.com/saleor/saleor-app-klaviyo"
+          >
+            Visit repository & readme
+          </Link>
+        </ListItem>
+      </List>
+      <Typography variant="h3">How to configure</Typography>
+      <List>
+        <ListItem>
+          <Link
+            onClick={(e) => {
+              e.preventDefault();
+
+              openExternalUrl(
+                "https://help.klaviyo.com/hc/en-us/articles/115005062267-How-to-Manage-Your-Account-s-API-Keys"
+              );
+            }}
+            href="https://help.klaviyo.com/hc/en-us/articles/115005062267-How-to-Manage-Your-Account-s-API-Keys"
+          >
+            Read about public tokens
+          </Link>
+        </ListItem>
+        <ListItem>
+          <Link
+            onClick={(e) => {
+              e.preventDefault();
+
+              openExternalUrl("https://www.klaviyo.com/account#api-keys-tab");
+            }}
+            href="https://www.klaviyo.com/account#api-keys-tab"
+          >
+            Get public token here
+          </Link>
+        </ListItem>
+        <ListItem>
+          <Link
+            onClick={(e) => {
+              e.preventDefault();
+
+              openExternalUrl(
+                "https://help.klaviyo.com/hc/en-us/articles/115005076787-Guide-to-Managing-Your-Metrics"
+              );
+            }}
+            href="https://help.klaviyo.com/hc/en-us/articles/115005076787-Guide-to-Managing-Your-Metrics"
+          >
+            Read about metrics
+          </Link>
+        </ListItem>
+      </List>
+    </Section>
+  );
+}
 
 function Configuration() {
   const { appBridgeState } = useAppBridge();
@@ -80,7 +170,8 @@ function Configuration() {
         setTransitionState("error");
         await notify({
           status: "error",
-          title: "Configuration update failed. Ensure fields are filled correctly",
+          title:
+            "Configuration update failed. Ensure fields are filled correctly and you have MANAGE_APPS permission",
         });
       });
   };
@@ -126,121 +217,41 @@ function Configuration() {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
-      {configuration!.map(({ key, value }) => (
-        <div key={key} className={classes.fieldContainer}>
-          <TextField label={key} name={key} fullWidth onChange={onChange} value={value} />
-        </div>
-      ))}
-      <div>
-        <ConfirmButton
-          type="submit"
-          variant="primary"
-          transitionState={transitionState}
-          labels={{
-            confirm: "Save",
-            error: "Error",
-          }}
-          className={classes.confirmButton}
-        />
-      </div>
-    </form>
-  );
-}
-
-function Instructions() {
-  const { appBridge } = useAppBridge();
-
-  const openExternalUrl = (url: string) => {
-    // eslint-disable-next-line
-    appBridge?.dispatch({
-      type: "redirect",
-      payload: {
-        newContext: true,
-        actionId: "redirect_from_klaviyo_app",
-        to: url,
-      },
-    });
-  };
-
-  return (
     <div>
-      <Typography>Useful links</Typography>
-      <List>
-        <ListItem>
-          <a
-            onClick={(e) => {
-              e.preventDefault();
-
-              openExternalUrl("https://github.com/saleor/saleor-app-klaviyo");
-            }}
-            href="https://github.com/saleor/saleor-app-klaviyo"
-          >
-            Visit repository & readme
-          </a>
-        </ListItem>
-      </List>
-      <Typography>How to configure</Typography>
-      <List>
-        <ListItem>
-          <a
-            onClick={(e) => {
-              e.preventDefault();
-
-              openExternalUrl(
-                "https://help.klaviyo.com/hc/en-us/articles/115005062267-How-to-Manage-Your-Account-s-API-Keys"
-              );
-            }}
-            href="https://help.klaviyo.com/hc/en-us/articles/115005062267-How-to-Manage-Your-Account-s-API-Keys"
-          >
-            Read about public tokens
-          </a>
-        </ListItem>
-        <ListItem>
-          <a
-            onClick={(e) => {
-              e.preventDefault();
-
-              openExternalUrl("https://www.klaviyo.com/account#api-keys-tab");
-            }}
-            href="https://www.klaviyo.com/account#api-keys-tab"
-          >
-            Get public token here
-          </a>
-        </ListItem>
-        <ListItem>
-          <a
-            onClick={(e) => {
-              e.preventDefault();
-
-              openExternalUrl(
-                "https://help.klaviyo.com/hc/en-us/articles/115005076787-Guide-to-Managing-Your-Metrics"
-              );
-            }}
-            href="https://help.klaviyo.com/hc/en-us/articles/115005076787-Guide-to-Managing-Your-Metrics"
-          >
-            Read about metrics
-          </a>
-        </ListItem>
-      </List>
+      <MainBar
+        icon={<AppIcon />}
+        bottomMargin
+        name="Saleor Klaviyo App"
+        author="By Saleor Commerce"
+      />
+      <AppColumnsLayout>
+        <div />
+        <Section>
+          <form onSubmit={handleSubmit}>
+            {configuration!.map(({ key, value }) => (
+              <div key={key} className={classes.fieldContainer}>
+                <TextField label={key} name={key} fullWidth onChange={onChange} value={value} />
+              </div>
+            ))}
+            <div>
+              <ConfirmButton
+                type="submit"
+                variant="primary"
+                transitionState={transitionState}
+                labels={{
+                  confirm: "Save",
+                  error: "Error",
+                }}
+                className={classes.confirmButton}
+              />
+            </div>
+          </form>
+        </Section>
+        <Instructions />
+      </AppColumnsLayout>
     </div>
   );
 }
-
-Configuration.getLayout = (page: ReactElement) => (
-  <div>
-    <Card style={{ marginBottom: 40 }}>
-      <CardHeader title="Instructions" />
-      <CardContent>
-        <Instructions />
-      </CardContent>
-    </Card>
-    <Card>
-      <CardHeader title="Configuration" />
-      <CardContent>{page}</CardContent>
-    </Card>
-  </div>
-);
 
 export default withAuthorization({
   notIframe: <AccessWarning cause="not_in_iframe" />,
