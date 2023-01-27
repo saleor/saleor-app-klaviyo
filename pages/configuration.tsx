@@ -8,6 +8,7 @@ import { ChangeEvent, SyntheticEvent, useEffect, useState } from "react";
 import AccessWarning from "../components/AccessWarning/AccessWarning";
 import useAppApi from "../hooks/useAppApi";
 import { AppColumnsLayout } from "../lib/ui/app-columns-layout";
+import { AppIcon } from "../lib/ui/app-icon";
 import { MainBar } from "../lib/ui/main-bar";
 import useDashboardNotifier from "../utils/useDashboardNotifier";
 
@@ -217,7 +218,12 @@ function Configuration() {
 
   return (
     <div>
-      <MainBar bottomMargin name="Saleor Klaviyo App" author="By Saleor Commerce" />
+      <MainBar
+        icon={<AppIcon />}
+        bottomMargin
+        name="Saleor Klaviyo App"
+        author="By Saleor Commerce"
+      />
       <AppColumnsLayout>
         <div />
         <Section>
