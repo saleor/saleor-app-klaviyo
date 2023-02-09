@@ -1,3 +1,3 @@
 # Saleor App Klaviyo
 
-App has been moved to [saleor/app monorepo](https://github.com/saleor/apps)
+App has been moved to the [saleor/apps monorepo](https://github.com/saleor/apps)
